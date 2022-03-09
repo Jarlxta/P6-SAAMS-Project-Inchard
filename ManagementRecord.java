@@ -388,7 +388,7 @@ public class ManagementRecord {
   * The status must have been READY_FOR_CLEAN_MAINT or CLEAN_AWAIT_MAINT and becomes FAULTY_AWAIT_CLEAN or AWAIT_REPAIR respectively.
   * @preconditions Status is READY_FOR_CLEAN_MAINT or CLEAN_AWAIT_MAINT*/
   public void faultsFound(String description){
-    if (status != READY_CLEAN_AND_MAINT || status != CLEAN_AWAIT_MAINT){
+    if (status != READY_CLEAN_AND_MAINT && status != CLEAN_AWAIT_MAINT){
       return;
     }
 
