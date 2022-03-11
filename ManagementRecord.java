@@ -358,7 +358,7 @@ public class ManagementRecord {
   * Status must have been either IN_TRANSIT or DEPARTING_THROUGH_LOCAL_AIRSPACE, and becomes FREE (and the flight details are cleared).
   * @preconditions Status is IN_TRANSIT or DEPARTING_THROUGH_LOCAL_AIRSPACE*/
   public void radarLostContact(){
-    if (status != IN_TRANSIT && status != DEPARTING_THROUGH_LOCAL_AIRSPACE){
+    if (status != IN_TRANSIT || status != DEPARTING_THROUGH_LOCAL_AIRSPACE){
       return;
     }
     flightCode = "";
@@ -388,7 +388,7 @@ public class ManagementRecord {
   * The status must have been READY_FOR_CLEAN_MAINT or CLEAN_AWAIT_MAINT and becomes FAULTY_AWAIT_CLEAN or AWAIT_REPAIR respectively.
   * @preconditions Status is READY_FOR_CLEAN_MAINT or CLEAN_AWAIT_MAINT*/
   public void faultsFound(String description){
-    if (status != READY_CLEAN_AND_MAINT && status != CLEAN_AWAIT_MAINT){
+    if (status != READY_CLEAN_AND_MAINT || status != CLEAN_AWAIT_MAINT){
       return;
     }
 
