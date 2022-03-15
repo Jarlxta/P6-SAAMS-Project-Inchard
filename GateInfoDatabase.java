@@ -16,6 +16,12 @@
  * @url element://model:project::SAAMS/design:view:::id1un8dcko4qme4cko4sw27
  */
 public class GateInfoDatabase {
+
+	  
+  /**
+   *  A constant: the number of aircraft gates at the airport.
+   */
+  public int maxGateNumber = 2;
   /**
  * Holds one gate object per gate in the airport.
  * @clientCardinality 1
@@ -24,42 +30,79 @@ public class GateInfoDatabase {
  * @link aggregationByValue
  * @supplierCardinality 0..*
  */
-  private Gate[] gates;
-
-  /**
-   *  A constant: the number of aircraft gates at the airport.
-   */
-  public int maxGateNumber = 2;
-
+  private Gate[] gates = new Gate[maxGateNumber];
 /**
  * Obtain and return the status of the given gate identified by the gateNumber parameter.
+ * Returns java.lang.ArrayIndexOutOfBoundsException if gate does not exist.
  */
   public int getStatus(int gateNumber){
+	  try {
+		  return gates[gateNumber].getStatus();
+	  //If gate is not yet instantiated, returns status of 0 which means gate is FREE.
+	  }catch(NullPointerException e) {
+		  return 0;
+	  }
   }
 
 /**
  * Returns an array containing the status of all gates.
  * For data collection by the GOC.
  */
-  public int[] getStatuses(){
+public int[] getStatuses(){	  
+	
+	  int[] statuses = new int[maxGateNumber];
+	  for(int i = 0; i < maxGateNumber; i++) {
+		  try {
+			  statuses[i] = gates[i].getStatus();  
+		  }catch(Exception NullPointerException) {
+			  //If gate not yet instantiated, status is free by default.
+			  statuses[i] = 0;
+		  }
+	  }
+	  return statuses;
   }
 
 /**
  * Forward a status change request to the given gate identified by the gateNumber parameter. Called to allocate a free gate to the aircraft identified by mCode.
  */
   public void allocate(int gateNumber, int mCode){
+	  try {
+		  //If gate isn't instantiated yet, create reference
+		  if(gates[gateNumber] == null) { 
+			  gates[gateNumber] = new Gate();
+		  }
+		  //Gate allocate handles validation 
+		  gates[gateNumber].allocate(mCode);
+		  //If gateNumber is not valid
+	  }catch(ArrayIndexOutOfBoundsException e) {
+		  System.out.println("Cannot allocate - Gate: " + gateNumber + ", does not exist.");
+	  }
   }
 
 /**
  * Forward a status change request to the given gate identified by the gateNumber parameter. Called to indicate that the expected aircraft has arrived at the gate.
  */
   public void docked(int gateNumber){
+	  try {
+		  gates[gateNumber].docked();
+	  }catch(ArrayIndexOutOfBoundsException e) {
+		  System.out.println("Cannot dock - Gate: " + gateNumber + ", does not exist.");
+	  }catch(NullPointerException e) {
+		  System.out.println("Cannot dock - Gate: " + gateNumber + ", is not allocated to aircraft.");
+	  }
   }
 
 /**
  * Forward a status change request to the given gate identified by the gateNumber parameter. Called to indicate that the aircraft has departed and that the gate is now free.
  */
   public void departed(int gateNumber){
+	  try {
+		  gates[gateNumber].departed();
+	  }catch(ArrayIndexOutOfBoundsException e) {
+		  System.out.println("Cannot depart - Gate: " + gateNumber + ", does not exist.");
+	  }catch(NullPointerException e) {
+		  System.out.println("Cannot depart - Gate: " + gateNumber + ", is not occupied by an aircraft.");
+	  }
   }
 
 }
