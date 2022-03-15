@@ -128,6 +128,7 @@ public class ManagementRecord {
  * Usually airline abbreviation plus number, e.g. BA127.
  * Obtained from the flight descriptor when the aircraft is first detected.
  *
+
  * This is the code used in timetables, and is useful to show on public information screens.*/
   private String flightCode;
 
