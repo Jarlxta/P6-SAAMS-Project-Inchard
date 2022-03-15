@@ -4,6 +4,7 @@
 
 import java.util.Arrays;
 import java.util.Observable;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -29,7 +30,17 @@ import java.util.stream.Collectors;
 public class AircraftManagementDatabase extends Observable {
 
 
-/**
+  public AircraftManagementDatabase(ManagementRecord[] MRs) {
+    this.MRs = new ManagementRecord[maxMRs];
+    MRs[0] = new ManagementRecord();
+    MRs[0].setStatus(ManagementRecord.FREE);
+    MRs[1] = new ManagementRecord();
+    MRs[2] = new ManagementRecord();
+    MRs[3] = new ManagementRecord();
+    MRs[4] = new ManagementRecord();
+  }
+
+  /**
  * Return the status of the MR with the given mCode supplied as a parameter.
  */
   public int getStatus(int mCode){
@@ -85,7 +96,10 @@ public class AircraftManagementDatabase extends Observable {
  *
  * This operation finds a currently FREE MR and forwards the radarDetect request to it for recording.*/
   public void radarDetect(FlightDescriptor fd){
-
+   Arrays.stream(MRs).filter(
+            available -> available.getStatus() == ManagementRecord.FREE)
+            .findFirst()
+            .ifPresent(mr -> mr.radarDetect(fd));
   }
 
 /**
@@ -93,6 +107,7 @@ public class AircraftManagementDatabase extends Observable {
  * The message is forwarded to the MR, which can then delete/archive its contents and become FREE.
  */
   public void radarLostContact(int mCode){
+    MRs[mCode].radarLostContact();
   }
 
 /**
@@ -100,17 +115,21 @@ public class AircraftManagementDatabase extends Observable {
  * The message is forwarded to the given MR for status update.
  */
   public void taxiTo(int mCode, int gateNumber){
+    //todo check if the gate is free
+    MRs[mCode].taxiTo(gateNumber);
   }
 
 /**
  *  The Maintenance Supervisor has reported faults with the given description in the aircraft with the given mCode.
  *  The message is forwarded to the given MR for status update.*/
   public void faultsFound(int mCode, String description){
+    MRs[mCode].faultsFound(description);
   }
 
 /**
  *  The given passenger is boarding the aircraft with the given mCode. Forward the message to the given MR for recording in the passenger list.*/
   public void addPassenger(int mCode, PassengerDetails details){
+      MRs[mCode].addPassenger(details);
   }
 
 /**

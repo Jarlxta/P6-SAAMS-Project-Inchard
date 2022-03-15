@@ -393,8 +393,8 @@ public class ManagementRecord {
  *
  * Status must be FREE now, and becomes either IN_TRANSIT or WANTING_TO_LAND depending on the details in the flight descriptor.
  * @preconditions Status is FREE*/
-//  public void radarDetect(FlightDescriptor fd){
-//  }
+  public void radarDetect(FlightDescriptor fd){
+  }
 
     /**
      * This aircraft has departed from local airspace.
@@ -404,7 +404,7 @@ public class ManagementRecord {
      * @preconditions Status is IN_TRANSIT or DEPARTING_THROUGH_LOCAL_AIRSPACE
      */
     public void radarLostContact() {
-        if (status != IN_TRANSIT || status != DEPARTING_THROUGH_LOCAL_AIRSPACE) { // This should be an or
+        if (status != IN_TRANSIT && status != DEPARTING_THROUGH_LOCAL_AIRSPACE) { // This should be an or
             return;
         }
         flightCode = "";
@@ -453,8 +453,8 @@ public class ManagementRecord {
  *
  * For this operation to be applicable, the status must be READY_PASSENGERS, and it doesn't change.
  * @preconditions Status is READY_PASSENGERS*/
-//  public void addPassenger(PassengerDetails details){
-//  }
+  public void addPassenger(PassengerDetails details){
+  }
 
 /** Return the entire current PassengerList.*/
 //  public PassengerList getPassengerList(){
