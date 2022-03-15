@@ -404,7 +404,7 @@ public class ManagementRecord {
      * @preconditions Status is IN_TRANSIT or DEPARTING_THROUGH_LOCAL_AIRSPACE
      */
     public void radarLostContact() {
-        if (status != IN_TRANSIT || status != DEPARTING_THROUGH_LOCAL_AIRSPACE) { // This should be an or
+        if (status != IN_TRANSIT && status != DEPARTING_THROUGH_LOCAL_AIRSPACE) {
             return;
         }
         flightCode = "";
@@ -428,24 +428,19 @@ public class ManagementRecord {
 
         gateNumber = gateNum;
 
-    }
 
-    /**
-     * The Maintenance Supervisor has reported faults.
-     * <p>
-     * The problem description is recorded.
-     * <p>
-     * The status must have been READY_FOR_CLEAN_MAINT or CLEAN_AWAIT_MAINT and becomes FAULTY_AWAIT_CLEAN or AWAIT_REPAIR respectively.
-     *
-     * @preconditions Status is READY_FOR_CLEAN_MAINT or CLEAN_AWAIT_MAINT
-     */
-    public void faultsFound(String description) {
-        if (status != READY_CLEAN_AND_MAINT || status != CLEAN_AWAIT_MAINT) { // This should be or instead of and
-            return;
-        }
-
-        faultDescription = description;
+/** The Maintenance Supervisor has reported faults.
+  *
+  * The problem description is recorded.
+  *
+  * The status must have been READY_FOR_CLEAN_MAINT or CLEAN_AWAIT_MAINT and becomes FAULTY_AWAIT_CLEAN or AWAIT_REPAIR respectively.
+  * @preconditions Status is READY_FOR_CLEAN_MAINT or CLEAN_AWAIT_MAINT*/
+  public void faultsFound(String description){
+    if (status != READY_CLEAN_AND_MAINT && status != CLEAN_AWAIT_MAINT){
+      return;
     }
+    faultDescription = description;
+  }
 
 /** The given passenger is boarding this aircraft.
  *
