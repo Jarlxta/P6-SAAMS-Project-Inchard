@@ -17,8 +17,8 @@ public class FlightDescriptor {
    */
   public FlightDescriptor(String flightCode, Itinerary itinerary, PassengerList list){
     this.flightCode = flightCode;
-    this.lnkUnnamed = itinerary;
-    this.lnkUnnamed1 = list;
+    this.flighItinerary = itinerary;
+    this.passengers = list;
   }
 
   /**
@@ -28,7 +28,7 @@ public class FlightDescriptor {
    * @supplierCardinality 1
    * @label contains
    * @directed*/
-  private PassengerList lnkUnnamed1;
+  private PassengerList passengers;
 
   /**
    * Each Flight Descriptor contains a flight Itinerary..
@@ -37,7 +37,7 @@ public class FlightDescriptor {
    * @supplierCardinality 1
    * @label contains
    * @directed*/
-  private Itinerary lnkUnnamed;
+  private Itinerary flighItinerary;
 
 /**
  * A short string identifying the flight:
