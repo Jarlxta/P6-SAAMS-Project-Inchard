@@ -8,7 +8,6 @@
  * This class has public static int identifiers for the individual status codes.
  * An MR may be "FREE", or may contain a record of the status of an individual aircraft under the management of SAAMS.
  * An instance of AircraftManagementDatabase holds a collection of ManagementRecords, and sends the ManagementRecords messages to control/fetch their status.
- *
  * @stereotype entity
  * @url element://model:project::SAAMS/design:node:::id15rnfcko4qme4cko4swib.node107
  * @url element://model:project::SAAMS/design:view:::id3oolzcko4qme4cko4sx40
@@ -21,413 +20,378 @@
  */
 public class ManagementRecord {
 
-    /**
-     * Status code: This MR is currently not managing any aircraft information
-     * <p>
-     * See MRState diagram.
-     */
-    public static int FREE = 0;
+/** Status code: This MR is currently not managing any aircraft information
+ *
+ * See MRState diagram.*/
+  public static int FREE = 0;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int IN_TRANSIT = 1;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int IN_TRANSIT = 1;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int WANTING_TO_LAND = 2;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int WANTING_TO_LAND = 2;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int GROUND_CLEARANCE_GRANTED = 3;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int GROUND_CLEARANCE_GRANTED = 3;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int LANDING = 4;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int LANDING = 4;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int LANDED = 5;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int LANDED = 5;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int TAXIING = 6;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int TAXIING = 6;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int UNLOADING = 7;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int UNLOADING = 7;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int READY_CLEAN_AND_MAINT = 8;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int READY_CLEAN_AND_MAINT = 8;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int FAULTY_AWAIT_CLEAN = 9;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int FAULTY_AWAIT_CLEAN = 9;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int OK_AWAIT_CLEAN = 11;
+  /** Status code
+   *
+   * See MRState diagram.*/
+  public static int OK_AWAIT_CLEAN = 11;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int CLEAN_AWAIT_MAINT = 10;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int CLEAN_AWAIT_MAINT = 10;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int AWAIT_REPAIR = 12;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int AWAIT_REPAIR = 12;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int READY_REFUEL = 13;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int READY_REFUEL = 13;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int READY_PASSENGERS = 14;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int READY_PASSENGERS = 14;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int READY_DEPART = 15;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int READY_DEPART = 15;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int AWAITING_TAXI = 16;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int AWAITING_TAXI = 16;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int AWAITING_TAKEOFF = 17;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int AWAITING_TAKEOFF = 17;
 
-    /**
-     * Status code
-     * <p>
-     * See MRState diagram.
-     */
-    public static int DEPARTING_THROUGH_LOCAL_AIRSPACE = 18;
+/** Status code
+ *
+ * See MRState diagram.*/
+  public static int DEPARTING_THROUGH_LOCAL_AIRSPACE = 18;
 
-    /**
-     * The status code for this ManagementRecord.
-     */
-    private int status;
+/** The status code for this ManagementRecord.*/
+  private int status = FREE;
 
-    /**
-     * The gate number allocated to this aircraft, when there is one.
-     */
-    private int gateNumber;
+  /**
+   * The gate number allocated to this aircraft, when there is one.
+   */
+  private int gateNumber;
 
-    /**
-     * A short string identifying the flight:
-     * <p>
-     * Usually airline abbreviation plus number, e.g. BA127.
-     * Obtained from the flight descriptor when the aircraft is first detected.
-     * <p>
-     * This is the code used in timetables, and is useful to show on public information screens.
-     */
-    private String flightCode;
+/** A short string identifying the flight:
+ *
+ * Usually airline abbreviation plus number, e.g. BA127.
+ * Obtained from the flight descriptor when the aircraft is first detected.
+ *
+ * This is the code used in timetables, and is useful to show on public information screens.*/
+  private String flightCode;
 
-    /**
-     * Holds the aircraft's itinerary.
-     * Downloaded from the flight descriptor when the aircraft is first detected.
-     * @clientCardinality 1
-     * @directed true
-     * @label contains
-     * @shapeType AggregationLink
-     * @supplierCardinality 1
-     */
-    //private Itinerary itinerary;
+  /**
+ * Holds the aircraft's itinerary.
+ * Downloaded from the flight descriptor when the aircraft is first detected.
+ * @clientCardinality 1
+ * @directed true
+ * @label contains
+ * @shapeType AggregationLink
+ * @supplierCardinality 1
+ */
+  //private Itinerary itinerary;
 
-    /**
-     * The list of passengers on the aircraft.
-     * Incoming flights supply their passenger list in their flight decsriptor.
-     * Outbound flights have passenger lists built from passenger details supplied by the gate consoles.
-     * @clientCardinality 1
-     * @directed true
-     * @label contains
-     * @shapeType AggregationLink
-     * @supplierCardinality 1
-     */
-    //private PassengerList passengerList;
+  /**
+ * The list of passengers on the aircraft.
+ * Incoming flights supply their passenger list in their flight decsriptor.
+ * Outbound flights have passenger lists built from passenger details supplied by the gate consoles.
+ * @clientCardinality 1
+ * @directed true
+ * @label contains
+ * @shapeType AggregationLink
+ * @supplierCardinality 1
+ */
+  private PassengerList passengerList = new PassengerList();
 
-    /**
-     * Contains a description of what is wrong with the aircraft if it is found to be faulty during maintenance inspection.
-     */
-    private String faultDescription;
+  /**
+   * Contains a description of what is wrong with the aircraft if it is found to be faulty during maintenance inspection.
+   */
+  private String faultDescription;
 
 
-    /**
-     * Request to set the MR into a new status.
-     * <p>
-     * Only succeeds if the state change conforms to the MRState diagram.
-     * <p>
-     * This is a general purpose state change request where no special details accompany the state change.
-     * [Special status changers are, for example, "taxiTo", where a gate number is supplied.]
-     *
-     * @preconditions Valid transition requested
-     */
-    public void setStatus(int newStatus) {
-        // A switch which takes the current status, and only allows the state change if
-        // the newStatus is an appropriate transition as detailed in the MRState Diagram.
-        switch (status) {
-            // Currently FREE
-            // Any cases involving classes which are still skeletons and I am not in charge of, I will
-            // comment what I think the code for a given line should be.
-            case 0:
-                if (newStatus == IN_TRANSIT || newStatus == WANTING_TO_LAND) { // newStatus == 2 && Itinerary.getTo() == "Stirling";
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+  /**
+   * Request to set the MR into a new status.
+   *
+   * Always succeeds, meant for ease of testing when debugging specific states.
+   * Not meant for use in the final program, only a testing class.
+   * @param newStatus
+   */
+  public void setStatusDebugOverride(int newStatus){
+    status = newStatus;
+  }
+/**
+  * Request to set the MR into a new status.
+  *
+  * Only succeeds if the state change conforms to the MRState diagram.
+  *
+  * This is a general purpose state change request where no special details accompany the state change.
+  * [Special status changers are, for example, "taxiTo", where a gate number is supplied.]
+  * @preconditions Valid transition requested*/
+  public void setStatus(int newStatus){
+    // A switch which takes the current status, and only allows the state change if
+    // the newStatus is an appropriate transition as detailed in the MRState Diagram.
+      switch (status) {
+        // Currently FREE
+        // Any cases involving classes which are still skeletons and I am not in charge of, I will
+        // comment what I think the code for a given line should be.
+        case 0:
+          if (newStatus == IN_TRANSIT || newStatus == WANTING_TO_LAND) { // newStatus == 2 && Itinerary.getTo() == "Stirling";
+            status = newStatus;
+          }
+          else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            // Current IN_TRANSIT
-            case 1:
-                // Current DEPARTING_THROUGH_LOCAL_AIRSPACE
-            case 18:
-                if (newStatus == FREE) { //This will probably just be called in radarLostContact();
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+        // Current IN_TRANSIT
+        case 1:
+          // Current DEPARTING_THROUGH_LOCAL_AIRSPACE
+        case 18:
+          if (newStatus == FREE) { //This will probably just be called in radarLostContact();
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            // Current WANTING_TO_LAND
-            case 2:
-                if (newStatus == GROUND_CLEARANCE_GRANTED) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+          // Current WANTING_TO_LAND
+        case 2:
+          if (newStatus == GROUND_CLEARANCE_GRANTED) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            // Current GROUND_CLEARANCE_GRANTED
-            case 3:
-                if (newStatus == LANDING) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+          // Current GROUND_CLEARANCE_GRANTED
+        case 3:
+          if (newStatus == LANDING) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            // Current LANDING
-            case 4:
-                if (newStatus == LANDED) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+          // Current LANDING
+        case 4:
+          if (newStatus == LANDED) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            // Current LANDED
-            case 5:
-                if (newStatus == TAXIING) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+          // Current LANDED
+        case 5:
+          if (newStatus == TAXIING) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            // Current TAXIING
-            case 6:
-                if (newStatus == UNLOADING) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+          // Current TAXIING
+        case 6:
+          if (newStatus == UNLOADING) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            // Current UNLOADING
-            case 7:
-                // Current AWAIT_REPAIR
-            case 12:
-                if (newStatus == READY_CLEAN_AND_MAINT) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+          // Current UNLOADING
+        case 7:
+          // Current AWAIT_REPAIR
+        case 12:
+          if (newStatus == READY_CLEAN_AND_MAINT) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            // Current READY_CLEAN_AND_MAINT
-            case 8:
-                if (newStatus == FAULTY_AWAIT_CLEAN || newStatus == CLEAN_AWAIT_MAINT || newStatus == OK_AWAIT_CLEAN) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+          // Current READY_CLEAN_AND_MAINT
+        case 8:
+          if (newStatus == FAULTY_AWAIT_CLEAN || newStatus == CLEAN_AWAIT_MAINT || newStatus == OK_AWAIT_CLEAN) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            // Current FAULTY_AWAIT_CLEAN
-            case 9:
-                if (newStatus == AWAIT_REPAIR) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+          // Current FAULTY_AWAIT_CLEAN
+        case 9:
+          if (newStatus == AWAIT_REPAIR) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            // Current CLEAN_AWAIT_MAINT
-            case 10:
-                if (newStatus == AWAIT_REPAIR || newStatus == READY_REFUEL) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+          // Current CLEAN_AWAIT_MAINT
+        case 10:
+          if (newStatus == AWAIT_REPAIR || newStatus == READY_REFUEL) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            // Current OK_AWAIT_CLEAN
-            case 11:
-                if (newStatus == READY_REFUEL) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+          // Current OK_AWAIT_CLEAN
+        case 11:
+          if (newStatus == READY_REFUEL) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            // Current READY_REFUEL
-            case 13:
-                if (newStatus == READY_PASSENGERS) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+        // Current READY_REFUEL
+        case 13:
+          if (newStatus == READY_PASSENGERS) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            case 14:
-                if (newStatus == READY_DEPART) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+        case 14:
+          if (newStatus == READY_DEPART) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            case 15:
-                if (newStatus == AWAITING_TAXI) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+        case 15:
+          if (newStatus == AWAITING_TAXI) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            case 16:
-                if (newStatus == AWAITING_TAKEOFF) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
+        case 16:
+          if (newStatus == AWAITING_TAKEOFF) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
 
-            case 17:
-                if (newStatus == DEPARTING_THROUGH_LOCAL_AIRSPACE) {
-                    status = newStatus;
-                } else {
-                    System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
-                }
-                break;
-        }
-    }
+        case 17:
+          if (newStatus == DEPARTING_THROUGH_LOCAL_AIRSPACE) {
+            status = newStatus;
+          } else {
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+          }
+          break;
+      }
+      }
 
 
-    /**
-     * Return the status code of this MR.
-     */
-    public int getStatus() {
-        return status;
-    }
 
-    /**
-     * Return the flight code of this MR.
-     */
-    public String getFlightCode() {
-        return flightCode;
-    }
+  /**
+   * Return the status code of this MR.
+   */
+  public int getStatus(){
+    return status;
+  }
+
+  /**
+   * Return the flight code of this MR.
+   */
+  public String getFlightCode(){
+    return flightCode;
+  }
 
 /** Sets up the MR with details of newly detected flight
- *
- * Status must be FREE now, and becomes either IN_TRANSIT or WANTING_TO_LAND depending on the details in the flight descriptor.
- * @preconditions Status is FREE*/
+  *
+  * Status must be FREE now, and becomes either IN_TRANSIT or WANTING_TO_LAND depending on the details in the flight descriptor.
+  * @preconditions Status is FREE*/
 //  public void radarDetect(FlightDescriptor fd){
 //  }
 
-    /**
-     * This aircraft has departed from local airspace.
-     * <p>
-     * Status must have been either IN_TRANSIT or DEPARTING_THROUGH_LOCAL_AIRSPACE, and becomes FREE (and the flight details are cleared).
-     *
-     * @preconditions Status is IN_TRANSIT or DEPARTING_THROUGH_LOCAL_AIRSPACE
-     */
-    public void radarLostContact() {
-        if (status != IN_TRANSIT && status != DEPARTING_THROUGH_LOCAL_AIRSPACE) {
-            return;
-        }
-        flightCode = "";
-        faultDescription = "";
-        // Itinerary.clear() or something similar
-        // Passengerlist.clear() or something similar
-        setStatus(FREE);
+/** This aircraft has departed from local airspace.
+  *
+  * Status must have been either IN_TRANSIT or DEPARTING_THROUGH_LOCAL_AIRSPACE, and becomes FREE (and the flight details are cleared).
+  * @preconditions Status is IN_TRANSIT or DEPARTING_THROUGH_LOCAL_AIRSPACE*/
+  public void radarLostContact(){
+    if (status != IN_TRANSIT && status != DEPARTING_THROUGH_LOCAL_AIRSPACE){
+      System.out.println("ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN CONTACT LOST WITH VESSEL.");
+      return;
+    }
+    flightCode = "";
+    faultDescription = "";
+    // Itinerary.clear() or something similar
+    // Passengerlist.clear() or something similar
+    setStatus(FREE);
+  }
+
+/** GOC has allocated the given gate for unloading passengers.
+  *
+  * The gate number is recorded.The status must have been LANDED and becomes TAXIING.
+  * @preconditions Status is LANDED*/
+  public void taxiTo(int gateNum){
+    if (status != LANDED){
+      System.out.println("ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN ATTEMPTING TO TAXI.");
+      return;
     }
 
-    /**
-     * GOC has allocated the given gate for unloading passengers.
-     * <p>
-     * The gate number is recorded.The status must have been LANDED and becomes TAXIING.
-     *
-     * @preconditions Status is LANDED
-     */
-    public void taxiTo(int gateNum) {
-        if (status != LANDED) {
-            return;
-        }
+    gateNumber = gateNum;
 
-        gateNumber = gateNum;
-
+  }
 
 /** The Maintenance Supervisor has reported faults.
   *
@@ -437,23 +401,33 @@ public class ManagementRecord {
   * @preconditions Status is READY_FOR_CLEAN_MAINT or CLEAN_AWAIT_MAINT*/
   public void faultsFound(String description){
     if (status != READY_CLEAN_AND_MAINT && status != CLEAN_AWAIT_MAINT){
+      System.out.println("ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN REPORTING FAULTS.");
       return;
     }
+
     faultDescription = description;
   }
 
 /** The given passenger is boarding this aircraft.
- *
- * Their details are recorded in the passengerList.
- *
- * For this operation to be applicable, the status must be READY_PASSENGERS, and it doesn't change.
- * @preconditions Status is READY_PASSENGERS*/
-//  public void addPassenger(PassengerDetails details){
-//  }
+  *
+  * Their details are recorded in the passengerList.
+  *
+  * For this operation to be applicable, the status must be READY_PASSENGERS, and it doesn't change.
+  * @preconditions Status is READY_PASSENGERS*/
+  public void addPassenger(PassengerDetails details){
+    if (status != READY_PASSENGERS){
+      System.out.println("ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN ADDING PASSENGER.");
+      return;
+    }
+
+    // The actual work of this method is delegated to PassengerList's 'addPassenger' method!
+    passengerList.addPassenger(details, status);
+  }
 
 /** Return the entire current PassengerList.*/
-//  public PassengerList getPassengerList(){
-//  }
+  public PassengerList getPassengerList(){
+    return passengerList;
+  }
 
 /** Return the aircraft's Itinerary.*/
 //  public Itinerary getItinerary(){
