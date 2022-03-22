@@ -17,7 +17,7 @@ public class FlightDescriptor {
    */
   public FlightDescriptor(String flightCode, Itinerary itinerary, PassengerList list){
     this.flightCode = flightCode;
-    this.flighItinerary = itinerary;
+    this.flightItinerary = itinerary;
     this.passengers = list;
   }
 
@@ -37,7 +37,7 @@ public class FlightDescriptor {
    * @supplierCardinality 1
    * @label contains
    * @directed*/
-  private Itinerary flighItinerary;
+  private Itinerary flightItinerary;
 
 /**
  * A short string identifying the flight:
@@ -47,5 +47,30 @@ public class FlightDescriptor {
  *
  * This is the code used in timetables, and is useful to show on public information screens.*/
   private String flightCode;
+
+  /**
+   * Get the flight code.
+   * 
+   * @return The flight code.
+  */
+  public String getFlightCode() {
+    return flightCode;
+  }
+
+  /** Get the flight itinerary.
+   * 
+   * @return The flight itinerary
+   */
+  public Itinerary getItinerary() {
+    return flightItinerary;
+  }
+
+  /**
+   * Get the passenger list.
+   * @return The passenger list.
+   */
+  public PassengerList getPassengerList() {
+    return passengers;
+  }
 
 }
