@@ -128,9 +128,8 @@ public class ManagementRecord {
  * Usually airline abbreviation plus number, e.g. BA127.
  * Obtained from the flight descriptor when the aircraft is first detected.
  *
-
  * This is the code used in timetables, and is useful to show on public information screens.*/
-  private String flightCode;
+  private String flightCode = null;
 
   /**
  * Holds the aircraft's itinerary.
@@ -141,7 +140,7 @@ public class ManagementRecord {
  * @shapeType AggregationLink
  * @supplierCardinality 1
  */
-  //private Itinerary itinerary;
+  private Itinerary itinerary = null;
 
   /**
  * The list of passengers on the aircraft.
@@ -153,12 +152,12 @@ public class ManagementRecord {
  * @shapeType AggregationLink
  * @supplierCardinality 1
  */
-  private PassengerList passengerList = new PassengerList();
+  private PassengerList passengerList = null;
 
   /**
    * Contains a description of what is wrong with the aircraft if it is found to be faulty during maintenance inspection.
    */
-  private String faultDescription;
+  private String faultDescription = null;
 
 
   /**
@@ -362,6 +361,27 @@ public class ManagementRecord {
   * Status must be FREE now, and becomes either IN_TRANSIT or WANTING_TO_LAND depending on the details in the flight descriptor.
   * @preconditions Status is FREE*/
   public void radarDetect(FlightDescriptor fd){
+    if (status != FREE) {
+      System.out.println("ERROR IN RADAR DETECTION: STATUS NOT VALID WHEN CONTACT ESTABLISHED WITH VESSEL");
+    }
+
+    itinerary = fd.getFlightItinerary();
+    passengerList = fd.getPassengers();
+    flightCode = fd.getFlightCode();
+
+    if (itinerary.getTo().toUpperCase() != "STIRLING") {
+      setStatus(IN_TRANSIT);
+    }
+    else if (itinerary.getTo().toUpperCase() == "STIRLING") {
+      setStatus(WANTING_TO_LAND);
+    }
+    else {
+      System.out.println("ERROR IN RADAR DETECTION: DESTINATION COULD NOT BE DETERMINED");
+      System.out.println("CLEARING RECORD");
+      itinerary = null;
+      passengerList = null;
+      flightCode = null;
+    }
   }
 
 /** This aircraft has departed from local airspace.
@@ -373,10 +393,13 @@ public class ManagementRecord {
       System.out.println("ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN CONTACT LOST WITH VESSEL.");
       return;
     }
-    flightCode = "";
-    faultDescription = "";
-    // Itinerary.clear() or something similar
-    // Passengerlist.clear() or something similar
+
+    flightCode = null;
+    faultDescription = null;
+    itinerary = null;
+    passengerList = null;
+    gateNumber = -1;
+
     setStatus(FREE);
   }
 
@@ -391,6 +414,7 @@ public class ManagementRecord {
     }
 
     gateNumber = gateNum;
+    setStatus(TAXIING);
 
   }
 
@@ -407,6 +431,16 @@ public class ManagementRecord {
     }
 
     faultDescription = description;
+
+    if (status == READY_CLEAN_AND_MAINT) {
+      setStatus(FAULTY_AWAIT_CLEAN);
+    }
+    else if (status == CLEAN_AWAIT_MAINT){
+      setStatus(AWAIT_REPAIR);
+    }
+    else {
+      System.out.println("ERROR IN MANAGEMENT RECORD: INVALID STATUS CHANGE");
+    }
   }
 
 /** The given passenger is boarding this aircraft.
@@ -425,13 +459,21 @@ public class ManagementRecord {
     passengerList.addPassenger(details, status);
   }
 
-/** Return the entire current PassengerList.*/
+  /** Return the entire current PassengerList.
+   *  Will return NULL if the gate status is FREE
+   *  @return
+   */
   public PassengerList getPassengerList(){
     return passengerList;
   }
 
-/** Return the aircraft's Itinerary.*/
-//  public Itinerary getItinerary(){
-//  }
+  /** Return the aircraft's Itinerary.
+  *  Will return NULL if the gate status is FREE
+  *
+  */
+
+  public Itinerary getItinerary(){
+    return itinerary;
+  }
 
 }
