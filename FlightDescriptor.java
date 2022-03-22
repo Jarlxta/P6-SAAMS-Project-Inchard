@@ -50,15 +50,14 @@ public class FlightDescriptor {
 
   /**
    * Get the flight code.
-   * 
    * @return The flight code.
   */
   public String getFlightCode() {
     return flightCode;
   }
 
-  /** Get the flight itinerary.
-   * 
+  /**
+   * Get the flight itinerary.
    * @return The flight itinerary
    */
   public Itinerary getItinerary() {
