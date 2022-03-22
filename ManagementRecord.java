@@ -361,8 +361,8 @@ public class ManagementRecord {
   *
   * Status must be FREE now, and becomes either IN_TRANSIT or WANTING_TO_LAND depending on the details in the flight descriptor.
   * @preconditions Status is FREE*/
-//  public void radarDetect(FlightDescriptor fd){
-//  }
+  public void radarDetect(FlightDescriptor fd){
+  }
 
 /** This aircraft has departed from local airspace.
   *

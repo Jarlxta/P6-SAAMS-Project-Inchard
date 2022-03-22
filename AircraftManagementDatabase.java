@@ -65,8 +65,6 @@ public class AircraftManagementDatabase extends Observable {
  */
   public int maxMRs = 10;
 
-
-
 /**
  * Forward a status change request to the MR given by the mCode supplied as a parameter. Parameter newStatus is the requested new status. No effect is expected if the current status is not a valid preceding status. This operation is appropriate when the status change does not need any additional information to be noted. It is present instead of a large collection of public operations for requesting specific status changes.
  */
@@ -108,6 +106,8 @@ public class AircraftManagementDatabase extends Observable {
  */
   public void radarLostContact(int mCode){
     MRs[mCode].radarLostContact();
+    // setChanged();
+    // notifyObservers();
   }
 
 /**
@@ -115,7 +115,7 @@ public class AircraftManagementDatabase extends Observable {
  * The message is forwarded to the given MR for status update.
  */
   public void taxiTo(int mCode, int gateNumber){
-    //todo check if the gate is free
+    //todo check if the gate is free and set to reserved
     MRs[mCode].taxiTo(gateNumber);
   }
 
@@ -132,14 +132,14 @@ public class AircraftManagementDatabase extends Observable {
       MRs[mCode].addPassenger(details);
   }
 
-/**
- *  Return the PassengerList of the aircraft with the given mCode.*/
-  public PassengerList getPassengerList(int mCode){
-  }
-
-/**
- *  Return the Itinerary of the aircraft with the given mCode.*/
-  public Itinerary getItinerary(int mCode){
-  }
+///**
+// *  Return the PassengerList of the aircraft with the given mCode.*/
+//  public PassengerList getPassengerList(int mCode){
+//  }
+//
+///**
+// *  Return the Itinerary of the aircraft with the given mCode.*/
+//  public Itinerary getItinerary(int mCode){
+//  }
 
 }
