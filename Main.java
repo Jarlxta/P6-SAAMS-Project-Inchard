@@ -19,6 +19,8 @@ public class Main {
 public static void main(String[] args) {
     // Instantiate databases
     // Instantiate and show all interfaces as Frames
+  AircraftManagementDatabase aircraftManagementDatabase = new AircraftManagementDatabase(new ManagementRecord[10]);
+  LATC latc = new LATC(aircraftManagementDatabase);
   }
 
 }
