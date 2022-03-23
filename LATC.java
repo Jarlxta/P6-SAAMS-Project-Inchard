@@ -3,10 +3,13 @@
 
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -23,9 +26,9 @@ import java.util.Observer;
  * @url element://model:project::SAAMS/design:node:::id15rnfcko4qme4cko4swib.node107
  * @url element://model:project::SAAMS/design:view:::idwwyucko4qme4cko4sgxi
  */
-public class LATC extends JFrame implements Observer, ActionListener {
+public class LATC extends JFrame implements Observer, ActionListener, ListSelectionListener {
 
-  private final static String LATC_NAME = "Local Air Traffic Controls";
+  private final String LATC_NAME = "Local Air Traffic Controls";
   private final JLabel controls = new JLabel("Controls");
   private final JLabel inbounds = new JLabel("Inbound");
   private final JButton allowApproachClearance = new JButton("Allow Approach Clearance");
@@ -40,6 +43,8 @@ public class LATC extends JFrame implements Observer, ActionListener {
   private DefaultListModel<String> planesIncoming = new DefaultListModel<>();
   private final JList planesTF = new JList(planesIncoming);
 
+  private List<String> statuses;
+
 
 /**
   *  The Local Air Traffic Controller Screen interface has access to the AircraftManagementDatabase.
@@ -48,20 +53,42 @@ public class LATC extends JFrame implements Observer, ActionListener {
   * @label accesses/observes
   * @directed*/
 
-private AircraftManagementDatabase aircraftManagementDatabase;
+private AircraftManagementDatabase aMDatabase;
 
 
   public LATC(AircraftManagementDatabase aircraftManagementDatabase) {
-    super(LATC_NAME);
-    this.aircraftManagementDatabase = aircraftManagementDatabase;
-    //GUI
-    initiateGUI();
+    this.aMDatabase = aircraftManagementDatabase;
+    // if I want to mess with some JFrame components like color
+    Container window = getContentPane();
+    //creating the buttons, labels and the text fields for this view
+    initiateGUI(window);
     createLabels();
     createButtons();
     createTextFields();
-
-    this.aircraftManagementDatabase.addObserver(this); //adds this view/controller as an observer to the changes made in the AircraftManagementDatabase
+    //adding functionality
+    this.aMDatabase.addObserver(this); //adds this view/controller as an observer to the changes made in the AircraftManagementDatabase
     setVisible(true);
+
+    statuses = new ArrayList<String>();
+    statuses.add("FREE");
+    statuses.add("IN TRANSIT");
+    statuses.add("WANTING_TO_LAND");
+    statuses.add("GROUND_CLEARANCE_GRANTED");
+    statuses.add("LANDING");
+    statuses.add("LANDED");
+    statuses.add("TAXXING");
+    statuses.add("UNLOADING");
+    statuses.add("READY_CLEAN_AND_MAINT");
+    statuses.add("FAULTY_AWAITING_CLEAN");
+    statuses.add("CLEAN_AWAIT_MAINT");
+    statuses.add("OK_AWAIT_CLEAN");
+    statuses.add("AWAIT_REPAIR");
+    statuses.add("READY_REFUEL");
+    statuses.add("READY_PASSENGERS");
+    statuses.add("READY_DEPART");
+    statuses.add("AWAITING_TAXI");
+    statuses.add("AWAITING_TAKEOFF");
+    statuses.add("DEPARTING_THROUGH_LOCAL_AIRSPACE");
 }
 
   public void createLabels() {
@@ -79,29 +106,32 @@ private AircraftManagementDatabase aircraftManagementDatabase;
 
   public void createButtons() {
     allowApproachClearance.setBounds(170, 90, 200, 30);
+    allowApproachClearance.addActionListener(this);
     add(allowApproachClearance);
     confirmPlaneLanding.setBounds(170, 125, 200, 30);
+    confirmPlaneLanding.addActionListener(this);
     add(confirmPlaneLanding);
     permitTakeOff.setBounds(170, 200, 200, 30);
-    add(permitTakeOff);
     permitTakeOff.addActionListener(this);
-    allocateDepartureSlot.setBounds(170, 245, 200, 30);
+    add(permitTakeOff);
+    allocateDepartureSlot.setBounds(170, 235, 200, 30);
+    allocateDepartureSlot.addActionListener(this);
     add(allocateDepartureSlot);
   }
 
   public void createTextFields() {
     planesTF.setVisible(true);
     planesTF.setBounds(5, 45, 160, 410);
+    planesTF.addListSelectionListener(this);
     add(planesTF);
-    planeDetailsTF.setBounds(170, 310, 200, 150);
+    planeDetailsTF.setBounds(170, 305, 200, 150);
     add(planeDetailsTF);
   }
 
 
-  public void initiateGUI() {
+  public void initiateGUI(Container win) {
     setLayout(null);
     setTitle(LATC_NAME);
-    setBackground(Color.CYAN);
     setLocation(40, 40);
     setSize(400, 500);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -113,11 +143,43 @@ private AircraftManagementDatabase aircraftManagementDatabase;
 //  }
   @Override
   public void actionPerformed(ActionEvent e) {
+    if (e.getSource() == permitTakeOff){
+      planesIncoming.addElement("deez " + (planesIncoming.size()+1));
+    }
+    if (e.getSource() == allowApproachClearance){
+      Itinerary itinerary = new Itinerary("London", "Stirling", "Glasgow");
+      PassengerList pList = new PassengerList();
+      PassengerDetails John = new PassengerDetails("John");
+      pList.addPassenger(John, 14);
 
+      FlightDescriptor flight = new FlightDescriptor("B" + Integer.toString(742 + planesIncoming.size()), itinerary, pList);
+      aMDatabase.radarDetect(flight);
+    }
   }
 
   @Override
   public void update(Observable o, Object arg) {
+    List<Integer> freeMCodes = aMDatabase.getWithStatus(0);
+    int maxMRs = 10;
+    planesIncoming.clear();
 
+    for (int i = 0; i < maxMRs; i ++){
+      if (!freeMCodes.contains(i)){
+        planesIncoming.addElement(aMDatabase.getFlightCode(i) + " - " + statuses.get(aMDatabase.getStatus(i)));
+      }
+    }
+
+  }
+
+  @Override
+  public void valueChanged(ListSelectionEvent e) {
+    if (e.getValueIsAdjusting()) {
+      selectedPlane.clear();
+      int currentPlane = planesTF.getSelectedIndex();
+      selectedPlane.addElement(planesIncoming.get(currentPlane));
+      selectedPlane.addElement("DEPARTED FROM: " + aMDatabase.getItinerary(currentPlane).getFrom());
+      selectedPlane.addElement("CURRENT DESTINATION: " + aMDatabase.getItinerary(currentPlane).getTo());
+      selectedPlane.addElement("FINAL DESTINATION: " + aMDatabase.getItinerary(currentPlane).getNext());
+    }
   }
 }
