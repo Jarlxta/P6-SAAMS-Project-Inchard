@@ -40,7 +40,7 @@ public class GOC extends JFrame implements Observer, ActionListener {
   private final JLabel planesJL = new JLabel("Planes");
   private DefaultListModel<String> planesIncoming = new DefaultListModel<>();
   private final JList planesTF = new JList(planesIncoming);
-  private DefaultListModel<String> gatesAndStatus = new DefaultListModel<>();
+  private DefaultListModel<Gate> gatesAndStatus = new DefaultListModel<>();
   private final JList gateStatusTF = new JList(gatesAndStatus);
 
 
