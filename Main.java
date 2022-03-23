@@ -1,4 +1,4 @@
-
+import java.util.Arrays;
 
 /**
  * The Main class.
@@ -19,8 +19,16 @@ public class Main {
 public static void main(String[] args) {
     // Instantiate databases
     // Instantiate and show all interfaces as Frames
-  AircraftManagementDatabase aircraftManagementDatabase = new AircraftManagementDatabase(new ManagementRecord[10]);
+
+  FlightDescriptor fl = new FlightDescriptor("FK4",new Itinerary("A","A","A"),new PassengerList());
+
+  AircraftManagementDatabase aircraftManagementDatabase = new AircraftManagementDatabase();
   LATC latc = new LATC(aircraftManagementDatabase);
+  GOC goc = new GOC(aircraftManagementDatabase);
+
+
+
+  System.out.println(Arrays.toString(aircraftManagementDatabase.getWithStatus(0)));
   }
 
 }
