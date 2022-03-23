@@ -42,6 +42,7 @@ public class LATC extends JFrame implements Observer, ActionListener, ListSelect
   private final JLabel planesJL = new JLabel("Planes");
   private DefaultListModel<String> planesIncoming = new DefaultListModel<>();
   private final JList planesTF = new JList(planesIncoming);
+  private int currentPlaneIndex;
 
   private List<String> statuses;
 
@@ -58,6 +59,7 @@ private AircraftManagementDatabase aMDatabase;
 
   public LATC(AircraftManagementDatabase aircraftManagementDatabase) {
     this.aMDatabase = aircraftManagementDatabase;
+    this.currentPlaneIndex = -1;
     // if I want to mess with some JFrame components like color
     Container window = getContentPane();
     //creating the buttons, labels and the text fields for this view
@@ -94,37 +96,37 @@ private AircraftManagementDatabase aMDatabase;
   public void createLabels() {
     planesJL.setBounds(5, 20, 150, 20);
     add(planesJL);
-    controls.setBounds(230, 40, 100, 20);
+    controls.setBounds(330, 40, 100, 20);
     add(controls);
-    inbounds.setBounds(230, 65, 100, 20);
+    inbounds.setBounds(330, 65, 100, 20);
     add(inbounds);
-    outBound.setBounds(230, 175, 100, 20);
+    outBound.setBounds(330, 175, 100, 20);
     add(outBound);
-    planeDetails.setBounds(230, 285, 100, 20);
+    planeDetails.setBounds(330, 285, 100, 20);
     add(planeDetails);
   }
 
   public void createButtons() {
-    allowApproachClearance.setBounds(170, 90, 200, 30);
+    allowApproachClearance.setBounds(270, 90, 200, 30);
     allowApproachClearance.addActionListener(this);
     add(allowApproachClearance);
-    confirmPlaneLanding.setBounds(170, 125, 200, 30);
+    confirmPlaneLanding.setBounds(270, 125, 200, 30);
     confirmPlaneLanding.addActionListener(this);
     add(confirmPlaneLanding);
-    permitTakeOff.setBounds(170, 200, 200, 30);
+    permitTakeOff.setBounds(270, 235, 200, 30);
     permitTakeOff.addActionListener(this);
     add(permitTakeOff);
-    allocateDepartureSlot.setBounds(170, 235, 200, 30);
+    allocateDepartureSlot.setBounds(270, 200, 200, 30);
     allocateDepartureSlot.addActionListener(this);
     add(allocateDepartureSlot);
   }
 
   public void createTextFields() {
     planesTF.setVisible(true);
-    planesTF.setBounds(5, 45, 160, 410);
+    planesTF.setBounds(5, 45, 260, 410);
     planesTF.addListSelectionListener(this);
     add(planesTF);
-    planeDetailsTF.setBounds(170, 305, 200, 150);
+    planeDetailsTF.setBounds(270, 305, 200, 150);
     add(planeDetailsTF);
   }
 
@@ -133,7 +135,7 @@ private AircraftManagementDatabase aMDatabase;
     setLayout(null);
     setTitle(LATC_NAME);
     setLocation(40, 40);
-    setSize(400, 500);
+    setSize(500, 500);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
   }
 
@@ -143,17 +145,57 @@ private AircraftManagementDatabase aMDatabase;
 //  }
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == permitTakeOff){
-      planesIncoming.addElement("deez " + (planesIncoming.size()+1));
-    }
     if (e.getSource() == allowApproachClearance){
-      Itinerary itinerary = new Itinerary("London", "Stirling", "Glasgow");
-      PassengerList pList = new PassengerList();
-      PassengerDetails John = new PassengerDetails("John");
-      pList.addPassenger(John, 14);
 
-      FlightDescriptor flight = new FlightDescriptor("B" + Integer.toString(742 + planesIncoming.size()), itinerary, pList);
-      aMDatabase.radarDetect(flight);
+      if (currentPlaneIndex == -1){
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "LATC: You need to select an aircraft.");
+      }
+      else if (aMDatabase.getStatus(currentPlaneIndex) != statuses.indexOf("GROUND_CLEARANCE_GRANTED")){
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "LATC: The aircraft's status is not currently valid for this operation.");
+      }
+      else {
+        aMDatabase.setStatus(currentPlaneIndex, statuses.indexOf("LANDING"));
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "LATC: Granted approach clearance to Aircraft " + aMDatabase.getFlightCode(currentPlaneIndex));
+      }
+    }
+
+    if (e.getSource() == confirmPlaneLanding){
+      if (currentPlaneIndex == -1){
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "LATC: You need to select an aircraft.");
+      }
+      else if (aMDatabase.getStatus(currentPlaneIndex) != statuses.indexOf("LANDING")){
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "LATC: The aircraft's status is not currently valid for this operation.");
+      }
+      else {
+        aMDatabase.setStatus(currentPlaneIndex, statuses.indexOf("LANDED"));
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "LATC: Aircraft " + aMDatabase.getFlightCode(currentPlaneIndex) + " landing confirmed.");
+      }
+    }
+
+    if (e.getSource() == allocateDepartureSlot){
+      if (currentPlaneIndex == -1){
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "LATC: You need to select an aircraft.");
+      }
+      else if (aMDatabase.getStatus(currentPlaneIndex) != statuses.indexOf("READY_DEPART")){
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "LATC: The aircraft's status is not currently valid for this operation.");
+      }
+      else {
+        aMDatabase.setStatus(currentPlaneIndex, statuses.indexOf("AWAITING_TAXI"));
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "LATC: Aircraft " + aMDatabase.getFlightCode(currentPlaneIndex) + " assigned airslot, awaiting taxi.");
+      }
+    }
+
+    if (e.getSource() == permitTakeOff){
+      if (currentPlaneIndex == -1){
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "LATC: You need to select an aircraft.");
+      }
+      else if (aMDatabase.getStatus(currentPlaneIndex) != statuses.indexOf("AWAITING_TAKEOFF")){
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "LATC: The aircraft's status is not currently valid for this operation.");
+      }
+      else {
+        aMDatabase.setStatus(currentPlaneIndex, statuses.indexOf("DEPARTING_THROUGH_LOCAL_AIRSPACE"));
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "LATC: Aircraft " + aMDatabase.getFlightCode(currentPlaneIndex) + " granted clearance for takeoff, and they are now departing through local airspace.");
+      }
     }
   }
 
@@ -175,11 +217,11 @@ private AircraftManagementDatabase aMDatabase;
   public void valueChanged(ListSelectionEvent e) {
     if (e.getValueIsAdjusting()) {
       selectedPlane.clear();
-      int currentPlane = planesTF.getSelectedIndex();
-      selectedPlane.addElement(planesIncoming.get(currentPlane));
-      selectedPlane.addElement("DEPARTED FROM: " + aMDatabase.getItinerary(currentPlane).getFrom());
-      selectedPlane.addElement("CURRENT DESTINATION: " + aMDatabase.getItinerary(currentPlane).getTo());
-      selectedPlane.addElement("FINAL DESTINATION: " + aMDatabase.getItinerary(currentPlane).getNext());
+      currentPlaneIndex = planesTF.getSelectedIndex();
+      selectedPlane.addElement(planesIncoming.get(currentPlaneIndex));
+      selectedPlane.addElement("DEPARTED FROM: " + aMDatabase.getItinerary(currentPlaneIndex).getFrom());
+      selectedPlane.addElement("CURRENT DESTINATION: " + aMDatabase.getItinerary(currentPlaneIndex).getTo());
+      selectedPlane.addElement("FINAL DESTINATION: " + aMDatabase.getItinerary(currentPlaneIndex).getNext());
     }
   }
 }
