@@ -3,6 +3,11 @@
 
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * An interface to SAAMS:
@@ -20,7 +25,7 @@ import javax.swing.*;
  * @url element://model:project::SAAMS/design:view:::id3oolzcko4qme4cko4sx40
  * @url element://model:project::SAAMS/design:view:::id15rnfcko4qme4cko4swib
  */
-public class RadarTransceiver {
+public class RadarTransceiver extends JFrame implements Observer, ActionListener {
 
   private final static String RT = "Radar Tranceiver";
   private final JLabel flightCode = new JLabel("Flight Code");
@@ -59,5 +64,74 @@ public class RadarTransceiver {
   private AircraftManagementDatabase aircraftManagementDatabase;
 
 
+  public RadarTransceiver(AircraftManagementDatabase aircraftManagementDatabase){
+    super(RT);
+    this.aircraftManagementDatabase = aircraftManagementDatabase;
+    frame();
+    createLabels();
+    createTextFields();
+    createTAs();
 
+
+
+
+
+    this.aircraftManagementDatabase.addObserver(this);
+    setVisible(true);
+  }
+
+  public void createLabels() {
+    flightCode.setBounds(15,40,150,20);
+    add(flightCode);
+    flightTo.setBounds(15,70,150,20);
+    add(flightTo);
+    flightFrom.setBounds(15,100,150,20);
+    add(flightFrom);
+    nextStop.setBounds(15,130,150,20);
+    add(nextStop);
+    passengerName.setBounds(15,160,150,20);
+    add(passengerName);
+  }
+
+  public void createTextFields() {
+    flightCodeTF.setBounds(140,40,180,25);
+    add(flightCodeTF);
+    flightToTF.setBounds(140,70,180,25);
+    add(flightToTF);
+    flightFromTF.setBounds(140,100,180,25);
+    add(flightFromTF);
+    nextStopTF.setBounds(140,130,180,25);
+    add(nextStopTF);
+    passengerNameTF.setBounds(140,160,180,25);
+    add(passengerNameTF);
+  }
+
+  public void frame() {
+    setLayout(null);
+    setTitle(RT);
+    setBackground(Color.CYAN);
+    setLocation(500, 150);
+    setSize(850, 400);
+    setDefaultCloseOperation(EXIT_ON_CLOSE);
+  }
+
+  public void createTAs() {
+    passengerNameTA.setBounds(335,40,160,145);
+    add(passengerNameTA);
+
+  }
+
+
+
+
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+
+  }
+
+  @Override
+  public void update(Observable o, Object arg) {
+
+  }
 }

@@ -54,12 +54,12 @@ private AircraftManagementDatabase aircraftManagementDatabase;
   public LATC(AircraftManagementDatabase aircraftManagementDatabase) {
     super(LATC_NAME);
     this.aircraftManagementDatabase = aircraftManagementDatabase;
-    //creating the buttons, labels and the text fields for this view
+    //GUI
     initiateGUI();
     createLabels();
     createButtons();
     createTextFields();
-    //adding functionality
+
     this.aircraftManagementDatabase.addObserver(this); //adds this view/controller as an observer to the changes made in the AircraftManagementDatabase
     setVisible(true);
 }
