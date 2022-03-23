@@ -3,9 +3,12 @@
 
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -71,7 +74,7 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
     createLabels();
     createTextFields();
     createTAs();
-
+    createButtons();
 
 
 
@@ -91,6 +94,10 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
     add(nextStop);
     passengerName.setBounds(15,160,150,20);
     add(passengerName);
+    currentPlanes.setBounds(500,37,150,20);
+    add(currentPlanes);
+    passengers.setBounds(700,37,150,20);
+    add(passengers);
   }
 
   public void createTextFields() {
@@ -116,12 +123,22 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
   }
 
   public void createTAs() {
-    passengerNameTA.setBounds(335,40,160,145);
+    passengerNameTA.setBounds(335,40,125,160);
     add(passengerNameTA);
-
+    currentPlanesTA.setBounds(480,55,160,125);
+    add(currentPlanesTA);
+    planePassengersTa.setBounds(680, 55, 140 ,160 );
+    add(planePassengersTa);
   }
 
-
+  public void createButtons() {
+    addPassenger.setBounds(140,190,150,30);
+    add(addPassenger);
+    detectFlight.setBounds(140,220,150,30);
+    add(detectFlight);
+    leaveAirspace.setBounds(480,200,150,20);
+    add(leaveAirspace);
+  }
 
 
 
