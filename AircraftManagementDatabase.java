@@ -30,14 +30,14 @@ import java.util.stream.Collectors;
 public class AircraftManagementDatabase extends Observable {
 
 
-  public AircraftManagementDatabase(ManagementRecord[] MRs) {
+
+  public AircraftManagementDatabase() {
     this.MRs = new ManagementRecord[maxMRs];
-    MRs[0] = new ManagementRecord();
-    MRs[0].setStatus(ManagementRecord.FREE);
-    MRs[1] = new ManagementRecord();
-    MRs[2] = new ManagementRecord();
-    MRs[3] = new ManagementRecord();
-    MRs[4] = new ManagementRecord();
+    for (int i = 0; i < maxMRs; i++) {
+      MRs[i] = new ManagementRecord();
+//      MRs[i].setStatus(0);
+    }
+
   }
 
   /**
@@ -58,7 +58,7 @@ public class AircraftManagementDatabase extends Observable {
  * @shapeType AggregationLink
  * @supplierCardinality 0..*
  */
-  private ManagementRecord[] MRs;
+  private final ManagementRecord[] MRs;
 
 /**
  * The size of the array MRs holding ManagementRecords.<br /><br />In this simple system 10 will do!
