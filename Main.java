@@ -23,12 +23,12 @@ public static void main(String[] args) {
   FlightDescriptor fl = new FlightDescriptor("FK4",new Itinerary("A","A","A"),new PassengerList());
 
   AircraftManagementDatabase aircraftManagementDatabase = new AircraftManagementDatabase();
+  RadarTransceiver radarTransceiver = new RadarTransceiver(aircraftManagementDatabase);
   LATC latc = new LATC(aircraftManagementDatabase);
   GOC goc = new GOC(aircraftManagementDatabase);
 
 
-
-  System.out.println(Arrays.toString(aircraftManagementDatabase.getWithStatus(0)));
+  System.out.println(aircraftManagementDatabase.getWithStatus(0));
   }
 
 }
