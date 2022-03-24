@@ -77,6 +77,7 @@ public class GateConsole extends JFrame implements Observer, ActionListener{
   
   public GateConsole(int gate, AircraftManagementDatabase aircraftDB) {
 	  
+	    //If the gate does not exist it returns -1, and GUI is not created
 	    if(gateInfoDatabase.getStatus(gate) == -1) {
 	    	System.out.println(gate + " does not exist");
 	    	return;
@@ -89,6 +90,7 @@ public class GateConsole extends JFrame implements Observer, ActionListener{
 	    createLabels();
 	    createButtons();
 	    createTextFields();
+	  
 	    // apply pattern
 	    this.aircraftManagementDatabase.addObserver(this);
 	    this.gateInfoDatabase.addObserver(this);
@@ -96,7 +98,7 @@ public class GateConsole extends JFrame implements Observer, ActionListener{
 	  }
 
 	  public void createLabels() {
-		gateStatusJL.setBounds(200, 20, 150, 20);
+	    gateStatusJL.setBounds(200, 20, 150, 20);
 	    add(gateStatusJL);
 	    planeStatusJL.setBounds(200, 40, 150, 20);
 	    add(planeStatusJL);
@@ -143,13 +145,12 @@ public class GateConsole extends JFrame implements Observer, ActionListener{
 	    passengerNameTF.setBounds(360, 160, 150, 20);
 	    add(passengerNameTF);
 		  
-		//Passenger JList
-		passengerList.setVisible(true);
-		passengerList.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1,Color.BLACK));
-		passengerList.setBounds(10, 20, 200, 300);
+	    //Passenger JList
+	    passengerList.setVisible(true);
+	    passengerList.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1,Color.BLACK));
+	    passengerList.setBounds(10, 20, 200, 300);
 	    add(passengerList);
 	  }
-
 
 	  public void initiateGUI() {
 	    setLayout(null);
@@ -159,7 +160,6 @@ public class GateConsole extends JFrame implements Observer, ActionListener{
 	    setSize(600, 400);
 	    setDefaultCloseOperation(EXIT_ON_CLOSE);
 	  }
-
 
 	  @Override
 	  public void actionPerformed(ActionEvent e) {
