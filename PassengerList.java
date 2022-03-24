@@ -23,7 +23,11 @@ public class PassengerList {
  */
 
   // Changed from an Array to an ArrayList so that a flight does not need to have a set number of passengers.
-  private ArrayList<PassengerDetails> passengerList = new ArrayList<>();
+  private ArrayList<PassengerDetails> passengerList;
+
+  public PassengerList() {
+    passengerList = new ArrayList<>();
+  }
 
 /**
  * The given passenger is boarding.
@@ -32,7 +36,8 @@ public class PassengerList {
  */
   public void addPassenger(PassengerDetails details, int status){
     // Ready Passengers is an INT value; 14, according to the variables in Management Record.
-    if (status != 14){
+    // IN_TRANSIT and WANTING_TO_LAND are INT values of 1 & 2 respectively
+    if (status != 14 && status != 1 && status != 2){
       System.out.println("ERROR IN PASSENGERLIST: STATUS NOT VALID WHEN ADDING PASSENGER.");
       return;
     }
@@ -40,6 +45,10 @@ public class PassengerList {
     passengerList.add(details);
   }
 
+  /**
+   * Returns the length of the passenger list;
+   * this gives an idea of the currently occupied seating on the plane.
+   */
   public int getListLength(){
     return passengerList.size();
   }
