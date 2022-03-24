@@ -49,7 +49,7 @@ public class GateInfoDatabase extends Observable {
  */	
   public int getStatus(int gateNumber){ 
 	  try {
-		  gates[gateNumber].getStatus();	  
+		  return gates[gateNumber].getStatus();	  
 	  }catch(ArrayIndexOutOfBoundsException e) {
 		  System.out.println("Gate: " + gateNumber + ", does not exist.");
 	  }
