@@ -45,6 +45,10 @@ public class PassengerList {
     passengerList.add(details);
   }
 
+  public PassengerDetails getElement(int i){
+    return passengerList.get(i);
+  }
+
   /**
    * Returns the length of the passenger list;
    * this gives an idea of the currently occupied seating on the plane.
@@ -60,9 +64,9 @@ public class PassengerList {
     String list = "";
 
     for (int i = 0; i<passengerList.size(); i++){
-      list = list.concat(passengerList.get(i).getName());
+      list = list.concat(passengerList.get(i).getName()) + "\n";
       if (i != passengerList.size()-1){
-        list = list.concat(", ");
+        list = list.concat(",");
       }
     }
 

@@ -7,6 +7,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -21,6 +23,7 @@ import java.util.Observer;
  * (message contains a FlightDescriptor), and when radar contact with an aircraft is lost.
  * It also registers as an observer of the AircraftManagementDatabase, and is notified whenever any change occurs in that <<model>> element.
  * See written documentation.
+ *
  * @stereotype boundary/view/controller
  * @url element://model:project::SAAMS/design:view:::idwwyucko4qme4cko4sgxi
  * @url element://model:project::SAAMS/design:node:::id15rnfcko4qme4cko4swib.node107
@@ -30,125 +33,180 @@ import java.util.Observer;
  */
 public class RadarTransceiver extends JFrame implements Observer, ActionListener {
 
-  private final static String RT = "Radar Tranceiver";
-  private final JLabel flightCode = new JLabel("Flight Code");
-  private final JLabel flightTo = new JLabel("Flight To");
-  private final JLabel flightFrom = new JLabel("Flight From");
-  private final JLabel nextStop = new JLabel("Next Stop");
-  private final JLabel passengerName = new JLabel("Passenger Name");
-  private final JLabel currentPlanes = new JLabel("Current Planes");
-  private final JLabel passengers = new JLabel("Passengers");
+    private final static String RT = "Radar Tranceiver";
+    private final JLabel flightCode = new JLabel("Flight Code");
+    private final JLabel flightTo = new JLabel("Flight To");
+    private final JLabel flightFrom = new JLabel("Flight From");
+    private final JLabel nextStop = new JLabel("Next Stop");
+    private final JLabel passengerName = new JLabel("Passenger Name");
+    private final JLabel currentPlanes = new JLabel("Current Planes");
+    private final JLabel passengers = new JLabel("Passengers");
 
-  private final JTextField flightCodeTF = new JTextField();
-  private final JTextField flightToTF = new JTextField();
-  private final JTextField flightFromTF = new JTextField();
-  private final JTextField nextStopTF = new JTextField();
-  private final JTextField passengerNameTF = new JTextField();
+    private final JTextField flightCodeTF = new JTextField();
+    private final JTextField flightToTF = new JTextField();
+    private final JTextField flightFromTF = new JTextField();
+    private final JTextField nextStopTF = new JTextField();
+    private final JTextField passengerNameTF = new JTextField();
 
-  private final DefaultListModel<String> passengersAdded = new DefaultListModel<>();
-  private final JList passengerNameTA = new JList(passengersAdded);
-  private final DefaultListModel<String> planeList = new DefaultListModel<>();
-  private final JList currentPlanesTA = new JList(planeList);
-  private final DefaultListModel<String> planePassengers = new DefaultListModel<>();
-  private final JList planePassengersTa = new JList(planePassengers);
+    private final DefaultListModel<String> passengersAdded = new DefaultListModel<>();
+    private final JList passengerNameTA = new JList(passengersAdded);
+    private final DefaultListModel<String> planeList = new DefaultListModel<>();
+    private final JList currentPlanesTA = new JList(planeList);
+    private final DefaultListModel<String> planePassengers = new DefaultListModel<>();
+    private final JList planePassengersTa = new JList(planePassengers);
 
-  private final JButton addPassenger = new JButton("Add Passenger");
-  private final JButton detectFlight = new JButton("Detect Flight");
-  private final JButton leaveAirspace = new JButton("Leave Airspace");
-
-
-
-/**
-  * The Radar Transceiver interface has access to the AircraftManagementDatabase.
-  * @clientCardinality 1
-  * @supplierCardinality 1
-  * @label accesses/observes
-  * @directed*/
-  private AircraftManagementDatabase aircraftManagementDatabase;
+    private final JButton addPassenger = new JButton("Add Passenger");
+    private final JButton detectFlight = new JButton("Detect Flight");
+    private final JButton leaveAirspace = new JButton("Leave Airspace");
 
 
-  public RadarTransceiver(AircraftManagementDatabase aircraftManagementDatabase){
-    super(RT);
-    this.aircraftManagementDatabase = aircraftManagementDatabase;
-    frame();
-    createLabels();
-    createTextFields();
-    createTAs();
-    createButtons();
+    ManagementRecord managementRecord;
+    /**
+     * The Radar Transceiver interface has access to the AircraftManagementDatabase.
+     *
+     * @clientCardinality 1
+     * @supplierCardinality 1
+     * @label accesses/observes
+     * @directed
+     */
+    private final AircraftManagementDatabase aircraftManagementDatabase;
+
+
+    public RadarTransceiver(AircraftManagementDatabase aircraftManagementDatabase) {
+        super(RT);
+        this.aircraftManagementDatabase = aircraftManagementDatabase;
+        frame();
+        createLabels();
+        createTextFields();
+        createTAs();
+        createButtons();
+        this.aircraftManagementDatabase.addObserver(this);
+        setVisible(true);
+    }
+
+    public void createLabels() {
+        flightCode.setBounds(15, 40, 150, 20);
+        add(flightCode);
+        flightTo.setBounds(15, 70, 150, 20);
+        add(flightTo);
+        flightFrom.setBounds(15, 100, 150, 20);
+        add(flightFrom);
+        nextStop.setBounds(15, 130, 150, 20);
+        add(nextStop);
+        passengerName.setBounds(15, 160, 150, 20);
+        add(passengerName);
+        currentPlanes.setBounds(500, 37, 150, 20);
+        add(currentPlanes);
+        passengers.setBounds(700, 37, 150, 20);
+        add(passengers);
+    }
+
+    public void createTextFields() {
+        flightCodeTF.setBounds(140, 40, 180, 25);
+        add(flightCodeTF);
+        flightToTF.setBounds(140, 70, 180, 25);
+        add(flightToTF);
+        flightFromTF.setBounds(140, 100, 180, 25);
+        add(flightFromTF);
+        nextStopTF.setBounds(140, 130, 180, 25);
+        add(nextStopTF);
+        passengerNameTF.setBounds(140, 160, 180, 25);
+        add(passengerNameTF);
+    }
+
+    public void frame() {
+        setLayout(null);
+        setTitle(RT);
+        setBackground(Color.CYAN);
+        setLocation(500, 150);
+        setSize(850, 400);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    public void createTAs() {
+        passengerNameTA.setBounds(335, 40, 125, 160);
+        add(passengerNameTA);
+        currentPlanesTA.setBounds(480, 55, 160, 125);
+        add(currentPlanesTA);
+        planePassengersTa.setBounds(680, 55, 140, 160);
+        add(planePassengersTa);
+    }
+
+    public void createButtons() {
+        addPassenger.setBounds(140, 190, 150, 30);
+        addPassenger.addActionListener(this);
+        add(addPassenger);
+        detectFlight.setBounds(140, 220, 150, 30);
+        detectFlight.addActionListener(this);
+        add(detectFlight);
+        leaveAirspace.setBounds(480, 200, 150, 20);
+        leaveAirspace.addActionListener(this);
+        add(leaveAirspace);
+    }
+
+    // TOdo -> regex(validate.Flight)
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if (e.getSource() == detectFlight) {
+            aircraftManagementDatabase.radarDetect(mapFdToMR());
+            displayPlanes();
+        }
 
 
 
+//        currentPlanesTA.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                if(e.getClickCount() == 1) {
+//                    displayPassengers();
+//                }
+//            }
+//        });
+        selectValue();
 
-    this.aircraftManagementDatabase.addObserver(this);
-    setVisible(true);
-  }
+        if (e.getSource() == addPassenger) {
+            addPassengerToMr();
+            displayPassengers();
+        }
+    }
 
-  public void createLabels() {
-    flightCode.setBounds(15,40,150,20);
-    add(flightCode);
-    flightTo.setBounds(15,70,150,20);
-    add(flightTo);
-    flightFrom.setBounds(15,100,150,20);
-    add(flightFrom);
-    nextStop.setBounds(15,130,150,20);
-    add(nextStop);
-    passengerName.setBounds(15,160,150,20);
-    add(passengerName);
-    currentPlanes.setBounds(500,37,150,20);
-    add(currentPlanes);
-    passengers.setBounds(700,37,150,20);
-    add(passengers);
-  }
+    public void selectValue(){
+        currentPlanesTA.addListSelectionListener(e -> {
+            displayPassengers();
+        });
+    }
 
-  public void createTextFields() {
-    flightCodeTF.setBounds(140,40,180,25);
-    add(flightCodeTF);
-    flightToTF.setBounds(140,70,180,25);
-    add(flightToTF);
-    flightFromTF.setBounds(140,100,180,25);
-    add(flightFromTF);
-    nextStopTF.setBounds(140,130,180,25);
-    add(nextStopTF);
-    passengerNameTF.setBounds(140,160,180,25);
-    add(passengerNameTF);
-  }
+    //todo: replace length 10 with getSize from amdb (create method in there)
+    private void addPassengerToMr() {
+        for (int i = 0; i < 10; i++) {
+            if (aircraftManagementDatabase.getFlightCode(i) != null) {
+                if (aircraftManagementDatabase.getFlightCode(i).equals(currentPlanesTA.getSelectedValue())) {
+                    aircraftManagementDatabase.addPassenger(i, new PassengerDetails(passengerNameTF.getText()));
+                }
+            }
+        }
+    }
 
-  public void frame() {
-    setLayout(null);
-    setTitle(RT);
-    setBackground(Color.CYAN);
-    setLocation(500, 150);
-    setSize(850, 400);
-    setDefaultCloseOperation(EXIT_ON_CLOSE);
-  }
+    private void displayPassengers() {
+        managementRecord = aircraftManagementDatabase.findMrFromFlightCode((String) currentPlanesTA.getSelectedValue());
+        planePassengers.removeAllElements();
+        for(int i  = 0; i < managementRecord.getPassengerList().getListLength(); i++) {
+            planePassengers.addElement(managementRecord.getPassengerList().getElement(i).getName());
+        }
+    }
 
-  public void createTAs() {
-    passengerNameTA.setBounds(335,40,125,160);
-    add(passengerNameTA);
-    currentPlanesTA.setBounds(480,55,160,125);
-    add(currentPlanesTA);
-    planePassengersTa.setBounds(680, 55, 140 ,160 );
-    add(planePassengersTa);
-  }
+    private void displayPlanes() {
+        planeList.addElement(flightCodeTF.getText());
+    }
 
-  public void createButtons() {
-    addPassenger.setBounds(140,190,150,30);
-    add(addPassenger);
-    detectFlight.setBounds(140,220,150,30);
-    add(detectFlight);
-    leaveAirspace.setBounds(480,200,150,20);
-    add(leaveAirspace);
-  }
+    public FlightDescriptor mapFdToMR() {
+        return new FlightDescriptor(flightCodeTF.getText(),
+                new Itinerary(flightFromTF.getText(), flightToTF.getText(),
+                        nextStopTF.getText()),
+                new PassengerList());
+    }
 
-
-
-  @Override
-  public void actionPerformed(ActionEvent e) {
-
-  }
-
-  @Override
-  public void update(Observable o, Object arg) {
-
-  }
+    @Override
+    public void update(Observable o, Object arg) {}
 }

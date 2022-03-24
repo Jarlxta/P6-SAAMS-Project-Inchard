@@ -74,7 +74,7 @@ public class AircraftManagementDatabase extends Observable {
  * The request is forwarded to the MR.
  */
   public String getFlightCode(int mCode){
-    return  this.MRs[mCode].getFlightCode();
+    return this.MRs[mCode].getFlightCode();
   }
 
 /**
@@ -82,7 +82,6 @@ public class AircraftManagementDatabase extends Observable {
  * Just the mCodes of those MRs with the given status supplied as a parameter.
  * Principally for call by the various interface screens.
  */
-
 // Todo : change the method to apply on arraylists.
   public List<Integer> getWithStatus(int statusCode){
     List<Integer> list = new ArrayList<>();
@@ -102,6 +101,9 @@ public class AircraftManagementDatabase extends Observable {
             available -> available.getStatus() == ManagementRecord.FREE)
             .findFirst()
             .ifPresent(mr -> mr.radarDetect(fd));
+
+    setChanged();
+    notifyObservers();
   }
 
 /**
@@ -143,7 +145,11 @@ public class AircraftManagementDatabase extends Observable {
 //
 ///**
 // *  Return the Itinerary of the aircraft with the given mCode.*/
-//  public Itinerary getItinerary(int mCode){
-//  }
+  public Itinerary getItinerary(int mCode){
+    return MRs[mCode].getItinerary();
+  }
 
+  public ManagementRecord findMrFromFlightCode(String flightCode) {
+    return  Arrays.stream(MRs).filter(mr -> mr.getFlightCode().equals(flightCode)).findAny().orElseThrow();
+  }
 }
