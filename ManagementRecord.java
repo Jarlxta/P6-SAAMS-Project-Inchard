@@ -170,7 +170,6 @@ public class ManagementRecord {
   public void setStatusDebugOverride(int newStatus){
     status = newStatus;
   }
-
 /**
   * Request to set the MR into a new status.
   *
@@ -370,10 +369,10 @@ public class ManagementRecord {
     passengerList = fd.getPassengers();
     flightCode = fd.getFlightCode();
 
-    if (itinerary.getTo().toUpperCase() != "STIRLING") {
+    if (!itinerary.getTo().equalsIgnoreCase("STIRLING")) {
       setStatus(IN_TRANSIT);
     }
-    else if (itinerary.getTo().toUpperCase() == "STIRLING") {
+    else if (itinerary.getTo().equalsIgnoreCase("STIRLING")) {
       setStatus(WANTING_TO_LAND);
     }
     else {
@@ -451,7 +450,7 @@ public class ManagementRecord {
   * For this operation to be applicable, the status must be READY_PASSENGERS, and it doesn't change.
   * @preconditions Status is READY_PASSENGERS*/
   public void addPassenger(PassengerDetails details){
-    if (status != READY_PASSENGERS){
+    if (status != READY_PASSENGERS && status != IN_TRANSIT && status != WANTING_TO_LAND){
       System.out.println("ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN ADDING PASSENGER.");
       return;
     }
