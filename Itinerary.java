@@ -17,6 +17,7 @@ public class Itinerary {
    *  Constructor: Requires names of where the flight is coming from,
    * where it is going to now, and where next after that.
    */
+
   public Itinerary(String from, String to, String next){
     this.from = from;
     this.to = to;

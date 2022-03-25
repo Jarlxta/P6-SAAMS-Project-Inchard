@@ -338,7 +338,7 @@ public class ManagementRecord {
           }
           break;
       }
-      }
+  }
 
 
 
@@ -365,10 +365,11 @@ public class ManagementRecord {
       System.out.println("ERROR IN RADAR DETECTION: STATUS NOT VALID WHEN CONTACT ESTABLISHED WITH VESSEL");
     }
 
-    itinerary = fd.getFlightItinerary();
-    passengerList = fd.getPassengers();
+    itinerary = fd.getItinerary();
+    passengerList = fd.getPassengerList();
     flightCode = fd.getFlightCode();
 
+    //TODO: is the else really needed here?
     if (!itinerary.getTo().equalsIgnoreCase("STIRLING")) {
       setStatus(IN_TRANSIT);
     }
@@ -393,13 +394,11 @@ public class ManagementRecord {
       System.out.println("ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN CONTACT LOST WITH VESSEL.");
       return;
     }
-
     flightCode = null;
     faultDescription = null;
     itinerary = null;
     passengerList = null;
     gateNumber = -1;
-
     setStatus(FREE);
   }
 
@@ -412,10 +411,8 @@ public class ManagementRecord {
       System.out.println("ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN ATTEMPTING TO TAXI.");
       return;
     }
-
     gateNumber = gateNum;
     setStatus(TAXIING);
-
   }
 
 /** The Maintenance Supervisor has reported faults.
@@ -429,9 +426,7 @@ public class ManagementRecord {
       System.out.println("ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN REPORTING FAULTS.");
       return;
     }
-
     faultDescription = description;
-
     if (status == READY_CLEAN_AND_MAINT) {
       setStatus(FAULTY_AWAIT_CLEAN);
     }

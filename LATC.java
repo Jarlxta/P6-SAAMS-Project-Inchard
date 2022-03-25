@@ -143,6 +143,7 @@ private AircraftManagementDatabase aMDatabase;
 //  public String flightsLandingOrTransit() {
 //    return aircraftManagementDatabase.getStatus()
 //  }
+
   @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == allowApproachClearance){
@@ -210,9 +211,9 @@ private AircraftManagementDatabase aMDatabase;
         planesIncoming.addElement(aMDatabase.getFlightCode(i) + " - " + statuses.get(aMDatabase.getStatus(i)));
       }
     }
-
   }
 
+  // TODO : CHECK FROM AND TO (IF NEXT IS STIRLING THEN LAND ELSE DON'T)
   @Override
   public void valueChanged(ListSelectionEvent e) {
     if (e.getValueIsAdjusting()) {
