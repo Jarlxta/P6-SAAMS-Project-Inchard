@@ -9,10 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * An interface to SAAMS:
@@ -61,6 +59,7 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
 
 
     ManagementRecord managementRecord;
+
     /**
      * The Radar Transceiver interface has access to the AircraftManagementDatabase.
      *
@@ -70,7 +69,6 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
      * @directed
      */
     private final AircraftManagementDatabase aircraftManagementDatabase;
-
 
     public RadarTransceiver(AircraftManagementDatabase aircraftManagementDatabase) {
         super(RT);
@@ -152,8 +150,6 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
             aircraftManagementDatabase.radarDetect(mapFdToMR());
             displayPlanes();
         }
-
-
 
 //        currentPlanesTA.addMouseListener(new MouseAdapter() {
 //            @Override

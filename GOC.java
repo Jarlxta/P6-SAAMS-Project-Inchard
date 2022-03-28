@@ -16,6 +16,7 @@ import java.util.Observer;
  * This class is a controller for the GateInfoDatabase and the AircraftManagementDatabase: sending them messages to change the gate or aircraft status information.
  * This class also registers as an observer of the GateInfoDatabase and the AircraftManagementDatabase, and is notified whenever any change occurs in those <<model>> elements.
  * See written documentation.
+ *
  * @stereotype boundary/view/controller
  * @url element://model:project::SAAMS/design:node:::id2wdkkcko4qme4cko4svm2.node36
  * @url element://model:project::SAAMS/design:view:::id2wdkkcko4qme4cko4svm2
@@ -26,102 +27,179 @@ import java.util.Observer;
  */
 public class GOC extends JFrame implements Observer, ActionListener {
 
-  private final static String GOC = "Ground Operations Controller";
-  private final JLabel controls = new JLabel("Controls");
-  private final JLabel inbounds = new JLabel("Inbound");
-  private final JButton grantGroundClearance = new JButton("Grant Ground Clearance");
-  private final JButton taxiToGate = new JButton("Taxi to Gate");
-  private final JLabel outBound = new JLabel("Outbound");
-  private final JButton grantTaxiRunwayClearance = new JButton("Grant Taxi Runway Clearance");
-  private final JLabel planeDetails = new JLabel("Plane Details");
-  private final JLabel gateStatus = new JLabel("Gate Status");
-  private DefaultListModel<String> selectedPlane = new DefaultListModel<>();
-  private final JList planeDetailsTF = new JList(selectedPlane);
-  private final JLabel planesJL = new JLabel("Planes");
-  private DefaultListModel<String> planesIncoming = new DefaultListModel<>();
-  private final JList planesTF = new JList(planesIncoming);
-  private DefaultListModel<Gate> gatesAndStatus = new DefaultListModel<>();
-  private final JList gateStatusTF = new JList(gatesAndStatus);
+    private final static String GOC = "Ground Operations Controller";
+    private final JLabel controls = new JLabel("Controls");
+    private final JLabel inbounds = new JLabel("Inbound");
+    private final JButton grantGroundClearance = new JButton("Grant Ground Clearance");
+    private final JButton taxiToGate = new JButton("Taxi to Gate");
+    private final JLabel outBound = new JLabel("Outbound");
+    private final JButton grantTaxiRunwayClearance = new JButton("Grant Taxi Runway Clearance");
+    private final JLabel planeDetails = new JLabel("Plane Details");
+    private final JLabel gateStatus = new JLabel("Gate Status");
+    private DefaultListModel<String> selectedPlane = new DefaultListModel<>();
+    private final JList planeDetailsTF = new JList(selectedPlane);
+    private final JLabel planesJL = new JLabel("Planes");
+    private DefaultListModel<String> planesIncoming = new DefaultListModel<>();
+    private final JList planesTF = new JList(planesIncoming);
+    private DefaultListModel<Gate> gatesAndStatus = new DefaultListModel<>();
+    private final JList gateStatusTF = new JList(gatesAndStatus);
+    private int currentPlaneIndex;
+
+    /**
+     * The Ground Operations Controller Screen interface has access to the GateInfoDatabase.
+     *
+     * @clientCardinality 1
+     * @supplierCardinality 1
+     * @label accesses/observes
+     * @directed
+     */
+    private GateInfoDatabase gateInfoDatabase;
+
+    private ManagementRecord managementRecord;
+
+    /**
+     * The Ground Operations Controller Screen interface has access to the AircraftManagementDatabase.
+     *
+     * @clientCardinality 1
+     * @supplierCardinality 1
+     * @label accesses/observes
+     * @directed
+     */
+    private final AircraftManagementDatabase aircraftManagementDatabase;
+
+    public GOC(AircraftManagementDatabase aircraftManagementDatabase, GateInfoDatabase gateInfoDatabase) {
+        super(GOC);
+        this.aircraftManagementDatabase = aircraftManagementDatabase;
+        this.gateInfoDatabase = gateInfoDatabase;
+        // gui instantiation
+        initiateGUI();
+        createLabels();
+        createButtons();
+        createTextFields();
+        // apply pattern
+        this.aircraftManagementDatabase.addObserver(this);
+        // this.gateInfoDatabase.addObserver(this);
+        setVisible(true);
+    }
+
+    public void createLabels() {
+        planesJL.setBounds(5, 20, 150, 20);
+        add(planesJL);
+        controls.setBounds(230, 40, 100, 20);
+        add(controls);
+        inbounds.setBounds(230, 65, 100, 20);
+        add(inbounds);
+        outBound.setBounds(230, 175, 100, 20);
+        add(outBound);
+        planeDetails.setBounds(230, 285, 100, 20);
+        add(planeDetails);
+        gateStatus.setBounds(5, 240, 150, 20);
+        add(gateStatus);
+    }
+
+    public void createButtons() {
+        grantGroundClearance.addActionListener(this);
+        grantGroundClearance.setBounds(170, 90, 200, 30);
+        add(grantGroundClearance);
+        taxiToGate.addActionListener(this);
+        taxiToGate.setBounds(170, 125, 200, 30);
+        add(taxiToGate);
+        grantTaxiRunwayClearance.addActionListener(this);
+        grantTaxiRunwayClearance.setBounds(170, 245, 200, 30);
+        add(grantTaxiRunwayClearance);
+    }
+
+    public void createTextFields() {
+        planesTF.setVisible(true);
+        planesTF.setBounds(5, 45, 160, 180);
+        add(planesTF);
+        planeDetailsTF.setBounds(170, 310, 200, 150);
+        add(planeDetailsTF);
+        gateStatusTF.setBounds(5, 260, 160, 180);
+        add(gateStatusTF);
+    }
+
+    public void initiateGUI() {
+        setLayout(null);
+        setTitle(GOC);
+        setBackground(Color.CYAN);
+        setLocation(40, 40);
+        setSize(400, 500);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    public void displayFlightDetails() {
+        planesTF.addListSelectionListener(e -> {
+            if (planesTF.getSelectedValue() != null) {
+                selectedPlane.removeAllElements();
+                currentPlaneIndex = planesTF.getSelectedIndex();
+                selectedPlane.addElement("FlIGHT CODE : " + aircraftManagementDatabase.getFlightCode(currentPlaneIndex));
+                selectedPlane.addElement("STATUS : " + aircraftManagementDatabase.getStatus(currentPlaneIndex));
+//            selectedPlane.add(0, "Flight code: " + managementRecord.getFlightCode());
+//            selectedPlane.add(1, "Status: " + managementRecord.getStatus());
+//            selectedPlane.add(3, "of passengers: ");
+                selectedPlane.addElement("DEPARTED FROM: " + aircraftManagementDatabase.getItinerary(currentPlaneIndex).getFrom());
+                selectedPlane.addElement("CURRENT DESTINATION: " + aircraftManagementDatabase.getItinerary(currentPlaneIndex).getTo());
+                selectedPlane.addElement("FINAL DESTINATION: " + aircraftManagementDatabase.getItinerary(currentPlaneIndex).getNext());
+            }
+        });
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == grantGroundClearance) {
+            for (int i = 0; i < 10; i++) {
+                if (planesTF.getSelectedValue() != null) {
+                    if (aircraftManagementDatabase.getFlightCode(i).equals(planesTF.getSelectedValue()) && aircraftManagementDatabase.getStatus(i) == ManagementRecord.WANTING_TO_LAND)
+                        aircraftManagementDatabase.setStatus(i, ManagementRecord.GROUND_CLEARANCE_GRANTED);
+                }
+            }
+        }
+
+        displayFlightDetails();
+
+        if (e.getSource() == taxiToGate) {
+            for (int i = 0; i < 2; i++) {
+                gateInfoDatabase.allocate(i, aircraftManagementDatabase.findMrIndex((String) planesTF.getSelectedValue()));
+            }
+            int gate = gateInfoDatabase.getStatus(0);
 
 
-  /** The Ground Operations Controller Screen interface has access to the GateInfoDatabase.
-  * @clientCardinality 1
-  * @supplierCardinality 1
-  * @label accesses/observes
-  * @directed*/
-  private GateInfoDatabase gateInfoDatabase;
+            // ERROR That wasnt a valid state change Case 6 to 6
+            for (int i = 0; i < 10; i++) {
+                if (planesTF.getSelectedValue() != null) {
+                    if (aircraftManagementDatabase.getFlightCode(i).equals(planesTF.getSelectedValue()) && aircraftManagementDatabase.getStatus(i) == ManagementRecord.LANDED) {
+                        aircraftManagementDatabase.taxiTo(i, gate);
+                        aircraftManagementDatabase.setStatus(i, ManagementRecord.TAXIING);
+                    }
+                }
+            }
+        }
 
-  /**
-  * The Ground Operations Controller Screen interface has access to the AircraftManagementDatabase.
-  * @clientCardinality 1
-  * @supplierCardinality 1
-  * @label accesses/observes
-  * @directed*/
-  private AircraftManagementDatabase aircraftManagementDatabase;
+        if (e.getSource() == grantTaxiRunwayClearance) {
+            //TODO add checking for the taxi tarmac
+            managementRecord.setStatus(ManagementRecord.AWAITING_TAKEOFF);
+        }
+    }
 
-  public GOC(AircraftManagementDatabase aircraftManagementDatabase) {
-    super(GOC);
-    this.aircraftManagementDatabase = aircraftManagementDatabase;
-    // gui instantiation
-    initiateGUI();
-    createLabels();
-    createButtons();
-    createTextFields();
-    // apply pattern
-    this.aircraftManagementDatabase.addObserver(this);
-    // this.gateInfoDatabase.addObserver(this);
-    setVisible(true);
-  }
 
-  public void createLabels() {
-    planesJL.setBounds(5, 20, 150, 20);
-    add(planesJL);
-    controls.setBounds(230, 40, 100, 20);
-    add(controls);
-    inbounds.setBounds(230, 65, 100, 20);
-    add(inbounds);
-    outBound.setBounds(230, 175, 100, 20);
-    add(outBound);
-    planeDetails.setBounds(230, 285, 100, 20);
-    add(planeDetails);
-    gateStatus.setBounds(5, 240, 150, 20);
-    add(gateStatus);
-  }
+    //TODO : ADD STATUS TO BE SHOWN / COPY LATC METHOD FOR DISPLAY INFO
 
-  public void createButtons() {
-    grantGroundClearance.setBounds(170, 90, 200, 30);
-    add(grantGroundClearance);
-    taxiToGate.setBounds(170, 125, 200, 30);
-    add(taxiToGate);
-    grantTaxiRunwayClearance.setBounds(170, 245, 200, 30);
-    add(grantTaxiRunwayClearance);
-  }
+    /**
+     *
+     **/
+    @Override
+    public void update(Observable o, Object arg) {
+        List<Integer> freeMCodes = aircraftManagementDatabase.getWithStatus(0);
+        int maxMRs = 10;
+        planesIncoming.removeAllElements();
 
-  public void createTextFields() {
-    planesTF.setVisible(true);
-    planesTF.setBounds(5, 45, 160, 180);
-    add(planesTF);
-    planeDetailsTF.setBounds(170, 310, 200, 150);
-    add(planeDetailsTF);
-    gateStatusTF.setBounds(5, 260, 160, 180);
-    add(gateStatusTF);
-  }
-
-  public void initiateGUI() {
-    setLayout(null);
-    setTitle(GOC);
-    setBackground(Color.CYAN);
-    setLocation(40, 40);
-    setSize(400, 500);
-    setDefaultCloseOperation(EXIT_ON_CLOSE);
-  }
-
-  @Override
-  public void actionPerformed(ActionEvent e) {
-  }
-
-  @Override
-  public void update(Observable o, Object arg) {
-//    if(aircraftManagementDatabase.findMrFromFlightCode())
-  }
+        for (int i = 0; i < maxMRs; i++) {
+            if (!freeMCodes.contains(i) && aircraftManagementDatabase.getStatus(i) == 2
+                    || aircraftManagementDatabase.getStatus(i) == ManagementRecord.GROUND_CLEARANCE_GRANTED
+            ||aircraftManagementDatabase.getStatus(i) == ManagementRecord.LANDED ) {
+                planesIncoming.addElement(aircraftManagementDatabase.getFlightCode(i));
+            }
+        }
+    }
 }

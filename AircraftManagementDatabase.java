@@ -67,6 +67,8 @@ public class AircraftManagementDatabase extends Observable {
  */
   public void setStatus(int mCode, int newStatus){
     this.MRs[mCode].setStatus(newStatus);
+    setChanged();
+    notifyObservers();
   }
 
 /**
@@ -150,6 +152,26 @@ public class AircraftManagementDatabase extends Observable {
   }
 
   public ManagementRecord findMrFromFlightCode(String flightCode) {
-    return  Arrays.stream(MRs).filter(mr -> mr.getFlightCode().equals(flightCode)).findAny().orElseThrow();
+    for (int i = 0; i < maxMRs; i++) {
+      if(MRs[i].getFlightCode() != null) {
+        if (MRs[i].getFlightCode().equals(flightCode)) {
+          return MRs[i];
+        }
+      }else {
+        System.out.println("MR not found");
+      }
+    }
+    return null;
+  }
+//    return  Arrays.stream(MRs).filter(mr -> mr.getFlightCode().equals(flightCode)).findAny().orElseThrow();
+
+
+  public int findMrIndex(String fl) {
+    for (int i = 0; i < maxMRs; i++) {
+        if(Objects.equals(MRs[i].getFlightCode(), fl)) {
+          return i;
+        }
+    }
+    return -1;
   }
 }

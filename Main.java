@@ -20,15 +20,17 @@ public static void main(String[] args) {
     // Instantiate databases
     // Instantiate and show all interfaces as Frames
 
-  FlightDescriptor fl = new FlightDescriptor("FK4",new Itinerary("A","Stirling","A"),new PassengerList());
+//  FlightDescriptor fl = new FlightDescriptor("FK4",new Itinerary("A","Stirling","A"),new PassengerList());
 
+  GateInfoDatabase gateInfoDatabase = new GateInfoDatabase();
   AircraftManagementDatabase aircraftManagementDatabase = new AircraftManagementDatabase();
   RadarTransceiver radarTransceiver = new RadarTransceiver(aircraftManagementDatabase);
   LATC latc = new LATC(aircraftManagementDatabase);
-  GOC goc = new GOC(aircraftManagementDatabase);
+  GOC goc = new GOC(aircraftManagementDatabase,gateInfoDatabase);
+  GateConsole gateConsole= new GateConsole(aircraftManagementDatabase,gateInfoDatabase,1);
 
-  aircraftManagementDatabase.radarDetect(fl);
-  System.out.println(aircraftManagementDatabase.getWithStatus(0));
+//  aircraftManagementDatabase.radarDetect(fl);
+  System.out.println(aircraftManagementDatabase.getWithStatus(2));
   }
 
 }
