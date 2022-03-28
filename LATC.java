@@ -205,7 +205,6 @@ private AircraftManagementDatabase aMDatabase;
     List<Integer> freeMCodes = aMDatabase.getWithStatus(0);
     int maxMRs = 10;
     planesIncoming.clear();
-
     for (int i = 0; i < maxMRs; i ++){
       if (!freeMCodes.contains(i)){
         planesIncoming.addElement(aMDatabase.getFlightCode(i) + " - " + statuses.get(aMDatabase.getStatus(i)));

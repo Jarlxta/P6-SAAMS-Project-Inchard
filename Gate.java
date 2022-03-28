@@ -13,7 +13,6 @@
  * @url element://model:project::SAAMS/design:view:::id1jkohcko4qme4cko4svww
  */
 public class Gate {
-
   /**
    *  Return the status code for this gate.
    */

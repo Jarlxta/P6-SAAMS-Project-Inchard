@@ -41,9 +41,8 @@ public class GOC extends JFrame implements Observer, ActionListener {
     private final JLabel planesJL = new JLabel("Planes");
     private DefaultListModel<String> planesIncoming = new DefaultListModel<>();
     private final JList planesTF = new JList(planesIncoming);
-    private DefaultListModel<Gate> gatesAndStatus = new DefaultListModel<>();
+    private final DefaultListModel<String> gatesAndStatus = new DefaultListModel<>();
     private final JList gateStatusTF = new JList(gatesAndStatus);
-    private int currentPlaneIndex;
 
     /**
      * The Ground Operations Controller Screen interface has access to the GateInfoDatabase.
@@ -56,7 +55,8 @@ public class GOC extends JFrame implements Observer, ActionListener {
     private GateInfoDatabase gateInfoDatabase;
 
     private ManagementRecord managementRecord;
-
+    int mrIndex;
+    int gateIndex;
     /**
      * The Ground Operations Controller Screen interface has access to the AircraftManagementDatabase.
      *
@@ -78,7 +78,7 @@ public class GOC extends JFrame implements Observer, ActionListener {
         createTextFields();
         // apply pattern
         this.aircraftManagementDatabase.addObserver(this);
-        // this.gateInfoDatabase.addObserver(this);
+         this.gateInfoDatabase.addObserver(this);
         setVisible(true);
     }
 
@@ -123,81 +123,95 @@ public class GOC extends JFrame implements Observer, ActionListener {
         setLayout(null);
         setTitle(GOC);
         setBackground(Color.CYAN);
-        setLocation(40, 40);
+        setLocation(1200, 40);
         setSize(400, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-    }
-
-    public void displayFlightDetails() {
-        planesTF.addListSelectionListener(e -> {
-            if (planesTF.getSelectedValue() != null) {
-                selectedPlane.removeAllElements();
-                currentPlaneIndex = planesTF.getSelectedIndex();
-                selectedPlane.addElement("FlIGHT CODE : " + aircraftManagementDatabase.getFlightCode(currentPlaneIndex));
-                selectedPlane.addElement("STATUS : " + aircraftManagementDatabase.getStatus(currentPlaneIndex));
-//            selectedPlane.add(0, "Flight code: " + managementRecord.getFlightCode());
-//            selectedPlane.add(1, "Status: " + managementRecord.getStatus());
-//            selectedPlane.add(3, "of passengers: ");
-                selectedPlane.addElement("DEPARTED FROM: " + aircraftManagementDatabase.getItinerary(currentPlaneIndex).getFrom());
-                selectedPlane.addElement("CURRENT DESTINATION: " + aircraftManagementDatabase.getItinerary(currentPlaneIndex).getTo());
-                selectedPlane.addElement("FINAL DESTINATION: " + aircraftManagementDatabase.getItinerary(currentPlaneIndex).getNext());
-            }
-        });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == grantGroundClearance) {
-            for (int i = 0; i < 10; i++) {
-                if (planesTF.getSelectedValue() != null) {
-                    if (aircraftManagementDatabase.getFlightCode(i).equals(planesTF.getSelectedValue()) && aircraftManagementDatabase.getStatus(i) == ManagementRecord.WANTING_TO_LAND)
-                        aircraftManagementDatabase.setStatus(i, ManagementRecord.GROUND_CLEARANCE_GRANTED);
-                }
+            if (planesTF.getSelectedValue() != null) {
+                if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.WANTING_TO_LAND)
+                    aircraftManagementDatabase.setStatus(mrIndex, ManagementRecord.GROUND_CLEARANCE_GRANTED);
             }
         }
 
-        displayFlightDetails();
-
         if (e.getSource() == taxiToGate) {
-            for (int i = 0; i < 2; i++) {
-                gateInfoDatabase.allocate(i, aircraftManagementDatabase.findMrIndex((String) planesTF.getSelectedValue()));
-            }
-            int gate = gateInfoDatabase.getStatus(0);
-
-
-            // ERROR That wasnt a valid state change Case 6 to 6
-            for (int i = 0; i < 10; i++) {
-                if (planesTF.getSelectedValue() != null) {
-                    if (aircraftManagementDatabase.getFlightCode(i).equals(planesTF.getSelectedValue()) && aircraftManagementDatabase.getStatus(i) == ManagementRecord.LANDED) {
-                        aircraftManagementDatabase.taxiTo(i, gate);
-                        aircraftManagementDatabase.setStatus(i, ManagementRecord.TAXIING);
-                    }
+            if(planesTF.getSelectedValue() != null) {
+                if(aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.LANDED
+                        && gateInfoDatabase.getStatus(gateIndex)== Gate.FREE){
+                    aircraftManagementDatabase.taxiTo(mrIndex,gateIndex);
+//                    aircraftManagementDatabase.setStatus(mrIndex,ManagementRecord.TAXIING);
+                    gateInfoDatabase.allocate(gateIndex,mrIndex);
                 }
             }
         }
 
         if (e.getSource() == grantTaxiRunwayClearance) {
             //TODO add checking for the taxi tarmac
-            managementRecord.setStatus(ManagementRecord.AWAITING_TAKEOFF);
+
         }
     }
 
+    public void selectValue() {
+        planesTF.addListSelectionListener(e -> {
+            mrIndex = aircraftManagementDatabase.findMrIndex((String) planesTF.getSelectedValue());
+            displayFlightDetails();
+        });
+
+        gateStatusTF.addListSelectionListener(e -> {
+            if(gateStatusTF.getSelectedIndex() != -1){
+                gateIndex = gateStatusTF.getSelectedIndex();
+            }
+        });
+    }
+
+    public void displayFlightDetails() {
+        if (planesTF.getSelectedValue() != null) {
+            selectedPlane.removeAllElements();
+            selectedPlane.addElement("FlIGHT CODE : " + aircraftManagementDatabase.getFlightCode(mrIndex));
+            selectedPlane.addElement("STATUS : " + aircraftManagementDatabase.getStatus(mrIndex));
+            selectedPlane.addElement("DEPARTED FROM: " + aircraftManagementDatabase.getItinerary(mrIndex).getFrom());
+            selectedPlane.addElement("CURRENT DESTINATION: " + aircraftManagementDatabase.getItinerary(mrIndex).getTo());
+            selectedPlane.addElement("FINAL DESTINATION: " + aircraftManagementDatabase.getItinerary(mrIndex).getNext());
+        }
+    }
+
+    public void displayGatesWithStatus() {
+        gatesAndStatus.removeAllElements();
+        for (int i = 0; i < 2; i++) {
+            gatesAndStatus.addElement("Gate " + (i+1) + " - " + gateInfoDatabase.statusToText(gateInfoDatabase.getStatus(i)));
+        }
+    }
+
+//    public void updatePlaneDetails(){
+//        aircraftManagementDatabase.isStatusChanged();
+//    }
+
 
     //TODO : ADD STATUS TO BE SHOWN / COPY LATC METHOD FOR DISPLAY INFO
-
     /**
      *
      **/
     @Override
     public void update(Observable o, Object arg) {
+        selectValue();
+        displayGatesWithStatus();
+        displayFlightDetails();
+
         List<Integer> freeMCodes = aircraftManagementDatabase.getWithStatus(0);
         int maxMRs = 10;
         planesIncoming.removeAllElements();
 
+
         for (int i = 0; i < maxMRs; i++) {
             if (!freeMCodes.contains(i) && aircraftManagementDatabase.getStatus(i) == 2
                     || aircraftManagementDatabase.getStatus(i) == ManagementRecord.GROUND_CLEARANCE_GRANTED
-            ||aircraftManagementDatabase.getStatus(i) == ManagementRecord.LANDED ) {
+                    || aircraftManagementDatabase.getStatus(i) == ManagementRecord.LANDING
+                    || aircraftManagementDatabase.getStatus(i) == ManagementRecord.LANDED
+                    || aircraftManagementDatabase.getStatus(i) == ManagementRecord.TAXIING
+                    ) {
                 planesIncoming.addElement(aircraftManagementDatabase.getFlightCode(i));
             }
         }

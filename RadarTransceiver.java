@@ -59,7 +59,7 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
 
 
     ManagementRecord managementRecord;
-
+    int mrIndex;
     /**
      * The Radar Transceiver interface has access to the AircraftManagementDatabase.
      *
@@ -159,7 +159,6 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
 //                }
 //            }
 //        });
-        selectValue();
 
         if (e.getSource() == addPassenger) {
             addPassengerToMr();
@@ -167,19 +166,18 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
         }
     }
 
-    public void selectValue(){
+    public void selectValue() {
         currentPlanesTA.addListSelectionListener(e -> {
+            mrIndex = aircraftManagementDatabase.findMrIndex((String) currentPlanesTA.getSelectedValue());
             displayPassengers();
         });
     }
 
     //todo: replace length 10 with getSize from amdb (create method in there)
     private void addPassengerToMr() {
-        for (int i = 0; i < 10; i++) {
-            if (aircraftManagementDatabase.getFlightCode(i) != null) {
-                if (aircraftManagementDatabase.getFlightCode(i).equals(currentPlanesTA.getSelectedValue())) {
-                    aircraftManagementDatabase.addPassenger(i, new PassengerDetails(passengerNameTF.getText()));
-                }
+        if (aircraftManagementDatabase.getFlightCode(mrIndex) != null) {
+            if (aircraftManagementDatabase.getFlightCode(mrIndex).equals(currentPlanesTA.getSelectedValue())) {
+                aircraftManagementDatabase.addPassenger(mrIndex, new PassengerDetails(passengerNameTF.getText()));
             }
         }
     }
@@ -187,12 +185,15 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
     private void displayPassengers() {
         managementRecord = aircraftManagementDatabase.findMrFromFlightCode((String) currentPlanesTA.getSelectedValue());
         planePassengers.removeAllElements();
-        for(int i  = 0; i < managementRecord.getPassengerList().getListLength(); i++) {
+        for (int i = 0; i < managementRecord.getPassengerList().getListLength(); i++) {
             planePassengers.addElement(managementRecord.getPassengerList().getElement(i).getName());
         }
     }
 
+    //TODO  APPLY THE SAME ON LATC AND GOC
+    //TODO ADD JOPTION PANE TO SHOW ERROR MESSAGE
     private void displayPlanes() {
+        if(!planeList.contains(flightCodeTF.getText()))
         planeList.addElement(flightCodeTF.getText());
     }
 
@@ -204,5 +205,7 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
     }
 
     @Override
-    public void update(Observable o, Object arg) {}
+    public void update(Observable o, Object arg) {
+        selectValue();
+    }
 }

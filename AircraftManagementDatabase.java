@@ -34,7 +34,6 @@ public class AircraftManagementDatabase extends Observable {
     for (int i = 0; i < maxMRs; i++) {
       MRs[i] = new ManagementRecord();
     }
-
   }
 
   /**
@@ -125,6 +124,8 @@ public class AircraftManagementDatabase extends Observable {
   public void taxiTo(int mCode, int gateNumber){
     //todo check if the gate is free and set to reserved
     MRs[mCode].taxiTo(gateNumber);
+    setChanged();
+    notifyObservers();
   }
 
 /**
@@ -151,6 +152,8 @@ public class AircraftManagementDatabase extends Observable {
     return MRs[mCode].getItinerary();
   }
 
+
+
   public ManagementRecord findMrFromFlightCode(String flightCode) {
     for (int i = 0; i < maxMRs; i++) {
       if(MRs[i].getFlightCode() != null) {
@@ -165,6 +168,10 @@ public class AircraftManagementDatabase extends Observable {
   }
 //    return  Arrays.stream(MRs).filter(mr -> mr.getFlightCode().equals(flightCode)).findAny().orElseThrow();
 
+//  public void isStatusChanged(){
+//    setChanged();
+//    notifyObservers();
+//  }
 
   public int findMrIndex(String fl) {
     for (int i = 0; i < maxMRs; i++) {

@@ -340,8 +340,6 @@ public class ManagementRecord {
       }
   }
 
-
-
   /**
    * Return the status code of this MR.
    */

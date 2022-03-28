@@ -30,6 +30,7 @@ public static void main(String[] args) {
   GateConsole gateConsole= new GateConsole(aircraftManagementDatabase,gateInfoDatabase,1);
 
 //  aircraftManagementDatabase.radarDetect(fl);
+  System.out.println(Arrays.toString(gateInfoDatabase.getStatuses()));
   System.out.println(aircraftManagementDatabase.getWithStatus(2));
   }
 
