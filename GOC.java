@@ -142,7 +142,7 @@ public class GOC extends JFrame implements Observer, ActionListener {
                 if(aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.LANDED
                         && gateInfoDatabase.getStatus(gateIndex)== Gate.FREE){
                     aircraftManagementDatabase.taxiTo(mrIndex,gateIndex);
-//                    aircraftManagementDatabase.setStatus(mrIndex,ManagementRecord.TAXIING);
+
                     gateInfoDatabase.allocate(gateIndex,mrIndex);
                 }
             }
@@ -150,7 +150,6 @@ public class GOC extends JFrame implements Observer, ActionListener {
 
         if (e.getSource() == grantTaxiRunwayClearance) {
             //TODO add checking for the taxi tarmac
-
         }
     }
 
@@ -200,13 +199,10 @@ public class GOC extends JFrame implements Observer, ActionListener {
         displayGatesWithStatus();
         displayFlightDetails();
 
-        List<Integer> freeMCodes = aircraftManagementDatabase.getWithStatus(0);
         int maxMRs = 10;
         planesIncoming.removeAllElements();
-
-
         for (int i = 0; i < maxMRs; i++) {
-            if (!freeMCodes.contains(i) && aircraftManagementDatabase.getStatus(i) == 2
+            if (aircraftManagementDatabase.getStatus(i) == 2
                     || aircraftManagementDatabase.getStatus(i) == ManagementRecord.GROUND_CLEARANCE_GRANTED
                     || aircraftManagementDatabase.getStatus(i) == ManagementRecord.LANDING
                     || aircraftManagementDatabase.getStatus(i) == ManagementRecord.LANDED

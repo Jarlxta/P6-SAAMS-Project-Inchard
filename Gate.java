@@ -58,6 +58,10 @@ public class Gate {
  *  If the gate is reserved or occupied, the mCode of the MR of the aircraft which is expected/present.*/
   private int mCode;
 
+  public int getMCode(){
+      return this.mCode;
+  }
+
 /**
  *  Change status from OCCUPIED to FREE as the docked aircraft has now departed.
   * @preconditions Status must be Occupied*/

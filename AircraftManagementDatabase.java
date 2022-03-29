@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 public class AircraftManagementDatabase extends Observable {
 
-
+  //TODO : CHECK IF THE
 
   public AircraftManagementDatabase() {
     this.MRs = new ManagementRecord[maxMRs];
@@ -143,8 +143,9 @@ public class AircraftManagementDatabase extends Observable {
 
 ///**
 // *  Return the PassengerList of the aircraft with the given mCode.*/
-//  public PassengerList getPassengerList(int mCode){
-//  }
+  public PassengerList getPassengerList(int mCode){
+    return MRs[mCode].getPassengerList();
+  }
 //
 ///**
 // *  Return the Itinerary of the aircraft with the given mCode.*/
@@ -152,26 +153,24 @@ public class AircraftManagementDatabase extends Observable {
     return MRs[mCode].getItinerary();
   }
 
-
-
   public ManagementRecord findMrFromFlightCode(String flightCode) {
     for (int i = 0; i < maxMRs; i++) {
       if(MRs[i].getFlightCode() != null) {
         if (MRs[i].getFlightCode().equals(flightCode)) {
           return MRs[i];
         }
-      }else {
-        System.out.println("MR not found");
       }
     }
     return null;
+//    return  Arrays.stream(MRs).filter(mr -> mr.getFlightCode().equals(flightCode)).findAny().orElse(null);
   }
-//    return  Arrays.stream(MRs).filter(mr -> mr.getFlightCode().equals(flightCode)).findAny().orElseThrow();
+
 
 //  public void isStatusChanged(){
 //    setChanged();
 //    notifyObservers();
 //  }
+
 
   public int findMrIndex(String fl) {
     for (int i = 0; i < maxMRs; i++) {
@@ -180,5 +179,9 @@ public class AircraftManagementDatabase extends Observable {
         }
     }
     return -1;
+  }
+
+  public int getGate(int i) {
+    return MRs[i].getGate()+1;
   }
 }

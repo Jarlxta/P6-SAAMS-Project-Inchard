@@ -70,6 +70,11 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
      */
     private final AircraftManagementDatabase aircraftManagementDatabase;
 
+    // TODO : ADD EQUALS/HASHCODE TO MR AND FIX IF THE MR IS TRYING TO GET ADDED WITH SAME NAMES
+    //        GENERALLY CHECK THE VALIDATION ON ADDS AS IT'S NOT TO THE FINAL STATE YET
+
+
+
     public RadarTransceiver(AircraftManagementDatabase aircraftManagementDatabase) {
         super(RT);
         this.aircraftManagementDatabase = aircraftManagementDatabase;

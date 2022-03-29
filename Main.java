@@ -28,6 +28,8 @@ public static void main(String[] args) {
   LATC latc = new LATC(aircraftManagementDatabase);
   GOC goc = new GOC(aircraftManagementDatabase,gateInfoDatabase);
   GateConsole gateConsole= new GateConsole(aircraftManagementDatabase,gateInfoDatabase,1);
+  GateConsole gateConsole1= new GateConsole(aircraftManagementDatabase,gateInfoDatabase,2);
+
 
 //  aircraftManagementDatabase.radarDetect(fl);
   System.out.println(Arrays.toString(gateInfoDatabase.getStatuses()));
