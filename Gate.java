@@ -13,7 +13,6 @@
  * @url element://model:project::SAAMS/design:view:::id1jkohcko4qme4cko4svww
  */
 public class Gate {
-
   /**
    *  Return the status code for this gate.
    */
@@ -58,6 +57,10 @@ public class Gate {
 /**
  *  If the gate is reserved or occupied, the mCode of the MR of the aircraft which is expected/present.*/
   private int mCode;
+
+  public int getMCode(){
+      return this.mCode;
+  }
 
 /**
  *  Change status from OCCUPIED to FREE as the docked aircraft has now departed.
