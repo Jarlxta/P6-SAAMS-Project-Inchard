@@ -29,6 +29,8 @@ public static void main(String[] args) {
   GOC goc = new GOC(aircraftManagementDatabase,gateInfoDatabase);
   GateConsole gateConsole= new GateConsole(aircraftManagementDatabase,gateInfoDatabase,1);
   GateConsole gateConsole1= new GateConsole(aircraftManagementDatabase,gateInfoDatabase,2);
+  CleaningSupervisor cleaningSupervisor = new CleaningSupervisor(aircraftManagementDatabase);
+  MaintenanceInspector maintenanceInspector = new MaintenanceInspector(aircraftManagementDatabase);
 
 
 //  aircraftManagementDatabase.radarDetect(fl);

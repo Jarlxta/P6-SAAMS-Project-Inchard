@@ -163,19 +163,14 @@ public class MaintenanceInspector extends JFrame implements Observer {
 
   @Override
   public void update(Observable o, Object arg) {
-
+    // We want to display anything with the MR state READY_CLEAN_AND_MAINT and AWAIT_REPAIR
+    items.clear();
+    List<Integer> readyMRs = db.getWithStatus(ManagementRecord.READY_CLEAN_AND_MAINT);
+    List<Integer> repairMRs = db.getWithStatus(ManagementRecord.AWAIT_REPAIR);
+    for (int i : readyMRs)
+      items.add(String.valueOf(i));
+    for (int i : repairMRs)
+      items.add(String.valueOf(i));
   }
-
-//  @Override
-//  public void update(Observable o, Object arg) {
-//    // We want to display anything with the MR state READY_CLEAN_AND_MAINT and AWAIT_REPAIR
-//    items.clear();
-//    int[] readyMRs = db.getWithStatus(ManagementRecord.READY_CLEAN_AND_MAINT);
-//    int[] repairMRs = db.getWithStatus(ManagementRecord.AWAIT_REPAIR);
-//    for (int i : readyMRs)
-//      items.add(Integer.toString(i));
-//    for (int i : repairMRs)
-//      items.add(Integer.toString(i));
-//  }
 
 }
