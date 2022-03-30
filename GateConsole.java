@@ -68,7 +68,7 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
      * @directed
      * @label accesses/observes
      */
-    private AircraftManagementDatabase aircraftManagementDatabase;
+    private final AircraftManagementDatabase aircraftManagementDatabase;
 
     private ManagementRecord managementRecord;
     private int mCode;
@@ -197,6 +197,7 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
         flightToTF.setText(aircraftManagementDatabase.getItinerary(mCode).getTo());
         nextStopTF.setText(aircraftManagementDatabase.getItinerary(mCode).getNext());
         noOfPassengersTF.setText(aircraftManagementDatabase.getPassengerList(mCode).getListLength() + "");
+        displayPassengers();
     }
 
     public void removeInfoOnGate() {
@@ -234,7 +235,6 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
             aircraftManagementDatabase.setStatus(mCode, ManagementRecord.READY_CLEAN_AND_MAINT);
             displayInfoOnGate();
         }
-
 
         if (e.getSource() == addPassengerBtn) {
             if (plainIndexFromFlightCode() != null) {

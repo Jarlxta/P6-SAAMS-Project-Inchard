@@ -72,9 +72,7 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
 
     // TODO : ADD EQUALS/HASHCODE TO MR AND FIX IF THE MR IS TRYING TO GET ADDED WITH SAME NAMES
     //        GENERALLY CHECK THE VALIDATION ON ADDS AS IT'S NOT TO THE FINAL STATE YET
-
-
-
+    // TODO CHANGE THE NAME OF THE METHODS (E.G CREATE -> INIT)
     public RadarTransceiver(AircraftManagementDatabase aircraftManagementDatabase) {
         super(RT);
         this.aircraftManagementDatabase = aircraftManagementDatabase;
@@ -156,15 +154,6 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
             displayPlanes();
         }
 
-//        currentPlanesTA.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                if(e.getClickCount() == 1) {
-//                    displayPassengers();
-//                }
-//            }
-//        });
-
         if (e.getSource() == addPassenger) {
             addPassengerToMr();
             displayPassengers();
@@ -179,6 +168,7 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
     }
 
     //todo: replace length 10 with getSize from amdb (create method in there)
+    //
     private void addPassengerToMr() {
         if (aircraftManagementDatabase.getFlightCode(mrIndex) != null) {
             if (aircraftManagementDatabase.getFlightCode(mrIndex).equals(currentPlanesTA.getSelectedValue())) {
