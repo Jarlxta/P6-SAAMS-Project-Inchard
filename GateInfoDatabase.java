@@ -41,20 +41,6 @@ public class GateInfoDatabase extends Observable {
 	  }
 		
   }
-/**
- * Obtain and return the status of the given gate identified by the gateNumber parameter.
- * Returns java.lang.ArrayIndexOutOfBoundsException if gate does not exist.
- */	
-  public int getStatus(int gateNumber){ 
-	  try {
-		  return gates[gateNumber].getStatus();	  
-	  }catch(ArrayIndexOutOfBoundsException e) {
-		  System.out.println("Gate: " + gateNumber + ", does not exist.");
-	  }
-	  //Since 0 = free status, return -1 if error instead
-	  return -1;
-  }
-
 
     /**
      * Obtain and return the status of the given gate identified by the gateNumber parameter.
