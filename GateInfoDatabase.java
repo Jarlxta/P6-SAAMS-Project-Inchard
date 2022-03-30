@@ -17,31 +17,44 @@ import java.util.*;
  * @url element://model:project::SAAMS/design:view:::id1un8dcko4qme4cko4sw27
  */
 public class GateInfoDatabase extends Observable {
+  /**
+   *  A constant: the number of aircraft gates at the airport.
+   */
+  public int maxGateNumber = 2;
+  /**
+ * Holds one gate object per gate in the airport.
+ * @clientCardinality 1
+ * @directed true
+ * @label contains
+ * @link aggregationByValue
+ * @supplierCardinality 0..*
+ */
+  private Gate[] gates = new Gate[maxGateNumber];
+  
+  /*
+   * Constructor, instantiates the gates
+   * Status is free by default when gate is created
+   */
+  public GateInfoDatabase(){
+	  for(int i = 0; i < maxGateNumber; i++) {
+		  gates[i] = new Gate();
+	  }
+		
+  }
+/**
+ * Obtain and return the status of the given gate identified by the gateNumber parameter.
+ * Returns java.lang.ArrayIndexOutOfBoundsException if gate does not exist.
+ */	
+  public int getStatus(int gateNumber){ 
+	  try {
+		  return gates[gateNumber].getStatus();	  
+	  }catch(ArrayIndexOutOfBoundsException e) {
+		  System.out.println("Gate: " + gateNumber + ", does not exist.");
+	  }
+	  //Since 0 = free status, return -1 if error instead
+	  return -1;
+  }
 
-    /**
-     * A constant: the number of aircraft gates at the airport.
-     */
-    public int maxGateNumber = 2;
-    /**
-     * Holds one gate object per gate in the airport.
-     *
-     * @clientCardinality 1
-     * @directed true
-     * @label contains
-     * @link aggregationByValue
-     * @supplierCardinality 0..*
-     */
-    private Gate[] gates = new Gate[maxGateNumber];
-
-    /*
-     * Constructor, instantiates the gates
-     * Status is free by default when gate is created
-     */
-    public GateInfoDatabase() {
-        for (int i = 0; i < maxGateNumber; i++) {
-            gates[i] = new Gate();
-        }
-    }
 
     /**
      * Obtain and return the status of the given gate identified by the gateNumber parameter.
