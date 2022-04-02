@@ -134,6 +134,9 @@ public class AircraftManagementDatabase extends Observable {
  *  The message is forwarded to the given MR for status update.*/
   public void faultsFound(int mCode, String description){
     MRs[mCode].faultsFound(description);
+    setChanged();
+    notifyObservers();
+
   }
 
 /**
