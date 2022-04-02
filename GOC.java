@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -25,7 +27,7 @@ import java.util.Observer;
  * @url element://model:project::SAAMS/design:view:::id15rnfcko4qme4cko4swib
  * @url element://model:project::SAAMS/design:node:::id15rnfcko4qme4cko4swib.node107
  */
-public class GOC extends JFrame implements Observer, ActionListener {
+public class GOC extends JFrame implements Observer, ActionListener, FocusListener {
 
     private final static String GOC = "Ground Operations Controller";
     private final JLabel controls = new JLabel("Controls");
@@ -112,6 +114,7 @@ public class GOC extends JFrame implements Observer, ActionListener {
     public void createTextFields() {
         planesTF.setVisible(true);
         planesTF.setBounds(5, 45, 160, 180);
+        planesTF.addFocusListener(this);
         add(planesTF);
         planeDetailsTF.setBounds(170, 310, 200, 150);
         add(planeDetailsTF);
@@ -142,7 +145,6 @@ public class GOC extends JFrame implements Observer, ActionListener {
                 if(aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.LANDED
                         && gateInfoDatabase.getStatus(gateIndex)== Gate.FREE){
                     aircraftManagementDatabase.taxiTo(mrIndex,gateIndex);
-
                     gateInfoDatabase.allocate(gateIndex,mrIndex);
                 }
             }
@@ -177,6 +179,7 @@ public class GOC extends JFrame implements Observer, ActionListener {
         }
     }
 
+
     public void displayGatesWithStatus() {
         gatesAndStatus.removeAllElements();
         for (int i = 0; i < 2; i++) {
@@ -206,5 +209,14 @@ public class GOC extends JFrame implements Observer, ActionListener {
                 planesIncoming.addElement(aircraftManagementDatabase.getFlightCode(i));
             }
         }
+    }
+
+    @Override
+    public void focusGained(FocusEvent e) {
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        selectedPlane.removeAllElements();
     }
 }

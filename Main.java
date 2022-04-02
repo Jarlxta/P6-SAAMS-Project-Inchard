@@ -30,6 +30,7 @@ public static void main(String[] args) {
   GateConsole gateConsole1= new GateConsole(aircraftManagementDatabase,gateInfoDatabase,2);
   MaintenanceInspector maintenanceInspector = new MaintenanceInspector(aircraftManagementDatabase);
   CleaningSupervisor cleaningSupervisor = new CleaningSupervisor(aircraftManagementDatabase);
+  RefuellingSupervisor refuellingSupervisor = new RefuellingSupervisor(aircraftManagementDatabase);
 //  aircraftManagementDatabase.radarDetect(fl);
   }
 
