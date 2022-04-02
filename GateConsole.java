@@ -49,7 +49,7 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
 
     private DefaultListModel<String> passengerDefaultList = new DefaultListModel<>();
     private final JList passengerList = new JList(passengerDefaultList);
-
+	private JScrollPane passengerListScroll;
     /**
      * The GateConsole interface has access to the GateInfoDatabase.
      *
@@ -68,11 +68,11 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
      * @directed
      * @label accesses/observes
      */
-    private final AircraftManagementDatabase aircraftManagementDatabase;
+    private final AircraftManagementDatabase aMDatabase;
 
     private ManagementRecord managementRecord;
     private int mCode;
-
+    
     /**
      * This gate's gateNumber
      * - for identifying this gate's information in the GateInfoDatabase.
@@ -84,16 +84,17 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
     public GateConsole(AircraftManagementDatabase aircraftManagementDatabase, GateInfoDatabase gateInfoDatabase,
                        int gateNumber) {
         super(GATE);
-        this.aircraftManagementDatabase = aircraftManagementDatabase;
+        this.aMDatabase = aircraftManagementDatabase;
         this.gateInfoDatabase = gateInfoDatabase;
         this.gateNumber = gateNumber;
-        this.aircraftManagementDatabase.addObserver(this);
+        this.aMDatabase.addObserver(this);
         this.gateInfoDatabase.addObserver(this);
         initiateGUI();
         createLabels();
         createButtons();
         createTextFields();
         setVisible(true);
+        setLocationRelativeTo(null);
     }
 
     public void createLabels() {
@@ -132,9 +133,11 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
     }
 
     public void createTextFields() {
-        passengerList.setVisible(true);
-        passengerList.setBounds(5, 20, 160, 180);
-        add(passengerList);
+    	
+        
+        passengerListScroll = new JScrollPane(passengerList);
+        passengerListScroll.setBounds(5, 20, 160, 300);
+        add(passengerListScroll);
         gateStatusTF.setEditable(false);
         gateStatusTF.setBounds(300, 20, 180, 25);
         add(gateStatusTF);
@@ -172,15 +175,15 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
 
     public ManagementRecord plainIndexFromFlightCode() {
         if ((flightCodeTF.getText()) != null) {
-            return aircraftManagementDatabase.findMrFromFlightCode(flightCodeTF.getText());
+            return aMDatabase.findMrFromFlightCode(flightCodeTF.getText());
         }
         return null;
     }
 
     public void planeIndexForGate() {
-        for (int i = 0; i < aircraftManagementDatabase.maxMRs; i++) {
-            if (aircraftManagementDatabase.getStatus(i) == ManagementRecord.TAXIING
-                    && aircraftManagementDatabase.getGate(i) == this.gateNumber) {
+        for (int i = 0; i < aMDatabase.maxMRs; i++) {
+            if (aMDatabase.getStatus(i) == ManagementRecord.TAXIING
+                    && aMDatabase.getGate(i) == this.gateNumber) {
                 mCode = i;
                 displayInfoOnGate();
             }
@@ -188,16 +191,21 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
     }
 
     public void displayInfoOnGate() {
-        removeInfoOnGate();
-        gateStatusTF.setText(gateInfoDatabase.statusToText(gateInfoDatabase.getStatus(gateNumber - 1)));
-        //TODO CREATE METHOD IN AMD statusToString
-        planeStatusTF.setText(aircraftManagementDatabase.getStatus(mCode) + "");
-        flightCodeTF.setText(aircraftManagementDatabase.getFlightCode(mCode));
-        flightFromTF.setText(aircraftManagementDatabase.getItinerary(mCode).getFrom());
-        flightToTF.setText(aircraftManagementDatabase.getItinerary(mCode).getTo());
-        nextStopTF.setText(aircraftManagementDatabase.getItinerary(mCode).getNext());
-        noOfPassengersTF.setText(aircraftManagementDatabase.getPassengerList(mCode).getListLength() + "");
-        displayPassengers();
+    	try {
+    		removeInfoOnGate();
+	        gateStatusTF.setText(gateInfoDatabase.statusToText(gateInfoDatabase.getStatus(gateNumber - 1)));
+	        //TODO CREATE METHOD IN AMD statusToString
+	        planeStatusTF.setText(aMDatabase.statusAsText(aMDatabase.getStatus(mCode)) + "");
+	        flightCodeTF.setText(aMDatabase.getFlightCode(mCode));
+	        flightFromTF.setText(aMDatabase.getItinerary(mCode).getFrom());
+	        flightToTF.setText(aMDatabase.getItinerary(mCode).getTo());
+	        nextStopTF.setText(aMDatabase.getItinerary(mCode).getNext());
+	        noOfPassengersTF.setText(aMDatabase.getPassengerList(mCode).getListLength() + "");
+	        displayPassengers();
+    	}catch(java.lang.NullPointerException e) {
+    		removeInfoOnGate();
+    		JOptionPane.showMessageDialog(this, "There are no planes at this gate yet, consult ground controller.");
+    	}
     }
 
     public void removeInfoOnGate() {
@@ -226,21 +234,46 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == planeDockedBtn) {
-            gateInfoDatabase.docked(gateNumber - 1);
-            aircraftManagementDatabase.setStatus(mCode, ManagementRecord.UNLOADING);
-            displayInfoOnGate();
+        	if(gateInfoDatabase.getStatus(gateNumber - 1) == 1) {
+                gateInfoDatabase.docked(gateNumber - 1);
+                aMDatabase.setStatus(mCode, ManagementRecord.UNLOADING);
+                displayInfoOnGate();		
+        	}else {
+        		JOptionPane.showMessageDialog(this, "Gate must be reserved through ground controller panel.");
+        	}
+            return;
         }
 
         if (e.getSource() == planeUnloadedBtn) {
-            aircraftManagementDatabase.setStatus(mCode, ManagementRecord.READY_CLEAN_AND_MAINT);
-            displayInfoOnGate();
+        	if(gateInfoDatabase.getStatus(gateNumber - 1) == 2) {
+	            aMDatabase.setStatus(mCode, ManagementRecord.READY_CLEAN_AND_MAINT);
+	            displayInfoOnGate();
+        	}else {
+        		JOptionPane.showMessageDialog(this, "Gate must be occupied, "
+        				+ "press the docked button after gate has been reserved through ground controller.");
+        	}
+            return;
         }
 
         if (e.getSource() == addPassengerBtn) {
-            if (plainIndexFromFlightCode() != null) {
-                plainIndexFromFlightCode().addPassenger(new PassengerDetails(passengerNameTF.getText()));
-                displayPassengers();
-            }
+        	if(flightCodeTF.getText().isEmpty()) {
+        		JOptionPane.showMessageDialog(this, "There are no planes at this gate yet, consult ground controller.");
+        	}else {
+	            if (plainIndexFromFlightCode() != null) {
+	                plainIndexFromFlightCode().addPassenger(new PassengerDetails(passengerNameTF.getText()));
+	                displayPassengers();
+	            }	
+        	}
+        	return;
+        }
+        if (e.getSource() == flightReadyToDepartBtn) {
+        	if(gateInfoDatabase.getStatus(gateNumber - 1) == 2) {
+        		//TODO
+        	}else {
+        		JOptionPane.showMessageDialog(this, "Gate must be occupied, "
+        				+ "confirm docking of the plane first.");
+        	}
+        	return;
         }
     }
 }

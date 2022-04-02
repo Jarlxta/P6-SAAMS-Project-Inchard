@@ -43,10 +43,11 @@ public class LATC extends JFrame implements Observer, ActionListener, ListSelect
   private DefaultListModel<String> planesIncoming = new DefaultListModel<>();
   private final JList planesTF = new JList(planesIncoming);
   private int currentPlaneIndex;
-
-  private List<String> statuses;
-
-
+  
+  private JScrollPane planeDetailsScroll;
+  private JScrollPane planesTFScroll;
+  
+  public List<String> statuses;
 /**
   *  The Local Air Traffic Controller Screen interface has access to the AircraftManagementDatabase.
   * @supplierCardinality 1
@@ -70,27 +71,7 @@ private AircraftManagementDatabase aMDatabase;
     //adding functionality
     this.aMDatabase.addObserver(this); //adds this view/controller as an observer to the changes made in the AircraftManagementDatabase
     setVisible(true);
-
-    statuses = new ArrayList<String>();
-    statuses.add("FREE");
-    statuses.add("IN TRANSIT");
-    statuses.add("WANTING_TO_LAND");
-    statuses.add("GROUND_CLEARANCE_GRANTED");
-    statuses.add("LANDING");
-    statuses.add("LANDED");
-    statuses.add("TAXXING");
-    statuses.add("UNLOADING");
-    statuses.add("READY_CLEAN_AND_MAINT");
-    statuses.add("FAULTY_AWAITING_CLEAN");
-    statuses.add("CLEAN_AWAIT_MAINT");
-    statuses.add("OK_AWAIT_CLEAN");
-    statuses.add("AWAIT_REPAIR");
-    statuses.add("READY_REFUEL");
-    statuses.add("READY_PASSENGERS");
-    statuses.add("READY_DEPART");
-    statuses.add("AWAITING_TAXI");
-    statuses.add("AWAITING_TAKEOFF");
-    statuses.add("DEPARTING_THROUGH_LOCAL_AIRSPACE");
+    statuses = aMDatabase.statuses;
 }
 
   public void createLabels() {
@@ -123,11 +104,13 @@ private AircraftManagementDatabase aMDatabase;
 
   public void createTextFields() {
     planesTF.setVisible(true);
-    planesTF.setBounds(5, 45, 260, 410);
     planesTF.addListSelectionListener(this);
-    add(planesTF);
-    planeDetailsTF.setBounds(270, 305, 200, 150);
-    add(planeDetailsTF);
+    planesTFScroll = new JScrollPane(planesTF);
+    planesTFScroll.setBounds(5, 45, 260, 410);
+    add(planesTFScroll);
+    planeDetailsScroll = new JScrollPane(planeDetailsTF);
+    planeDetailsScroll.setBounds(270, 305, 200, 150);
+    add(planeDetailsScroll);
   }
 
 
