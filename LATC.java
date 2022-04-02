@@ -119,6 +119,7 @@ private AircraftManagementDatabase aMDatabase;
     allocateDepartureSlot.setBounds(270, 200, 200, 30);
     allocateDepartureSlot.addActionListener(this);
     add(allocateDepartureSlot);
+
   }
 
   public void createTextFields() {

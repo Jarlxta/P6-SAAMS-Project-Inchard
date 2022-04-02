@@ -11,7 +11,6 @@ import java.util.Arrays;
  */
 public class Main {
 
-
 /**
  * Launch SAAMS.
  */
@@ -29,11 +28,9 @@ public static void main(String[] args) {
   GOC goc = new GOC(aircraftManagementDatabase,gateInfoDatabase);
   GateConsole gateConsole= new GateConsole(aircraftManagementDatabase,gateInfoDatabase,1);
   GateConsole gateConsole1= new GateConsole(aircraftManagementDatabase,gateInfoDatabase,2);
-
-
+  MaintenanceInspector maintenanceInspector = new MaintenanceInspector(aircraftManagementDatabase);
+  CleaningSupervisor cleaningSupervisor = new CleaningSupervisor(aircraftManagementDatabase);
 //  aircraftManagementDatabase.radarDetect(fl);
-  System.out.println(Arrays.toString(gateInfoDatabase.getStatuses()));
-  System.out.println(aircraftManagementDatabase.getWithStatus(2));
   }
 
 }
