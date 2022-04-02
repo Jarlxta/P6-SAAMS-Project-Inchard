@@ -37,8 +37,8 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
   private final JButton reportFaultsBtn = new JButton("Report Faults");
   private final JButton completeBtn = new JButton("Complete");
 
-  private DefaultListModel<String> planeList = new DefaultListModel<>();
-  private final JList planeDetailsTA = new JList(planeList);
+  private DefaultListModel<String> commentsList = new DefaultListModel<>();
+  private final JList commentsTa = new JList(commentsList);
 
   private DefaultListModel<String> planesIncoming = new DefaultListModel<>();
   private final JList planesTA = new JList(planesIncoming);
@@ -64,7 +64,6 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
     this.aircraftManagementDatabase.addObserver(this);
     setVisible(true);
   }
-
 
   public void initGui() {
     setLayout(null);
@@ -97,27 +96,28 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
   public void initTextFields() {
     planesTA.setBounds(130, 50, 100, 220);
     add(planesTA);
-    planeDetailsTA.setBounds(400, 50, 300, 220);
-    add(planeDetailsTA);
+    commentsTa.setBounds(400, 50, 300, 220);
+    add(commentsTa);
   }
 
   public void displayFlightDetails() {
-      if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.READY_CLEAN_AND_MAINT
-              || aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.AWAIT_REPAIR) {
-        if(!planesIncoming.contains(aircraftManagementDatabase.getFlightCode(mrIndex)))
-          planesIncoming.addElement(aircraftManagementDatabase.getFlightCode(mrIndex));
+    int maxMRs = 10;
+    planesIncoming.removeAllElements();
+    for (int i = 0; i < maxMRs; i++) {
+      if (aircraftManagementDatabase.getStatus(i) == ManagementRecord.READY_CLEAN_AND_MAINT
+              || aircraftManagementDatabase.getStatus(i) == ManagementRecord.AWAIT_REPAIR
+              || aircraftManagementDatabase.getStatus(i) == ManagementRecord.CLEAN_AWAIT_MAINT
+              || aircraftManagementDatabase.getStatus(i) == ManagementRecord.FAULTY_AWAIT_CLEAN
+      )
+      {
+        planesIncoming.addElement(aircraftManagementDatabase.getFlightCode(i));
       }
-
-      if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.OK_AWAIT_CLEAN
-              || aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.READY_REFUEL) {
-        planesIncoming.removeElement(aircraftManagementDatabase.getFlightCode(mrIndex));
     }
   }
 
   public void selectValue() {
     planesTA.addListSelectionListener(e -> {
       mrIndex = aircraftManagementDatabase.findMrIndex((String) planesTA.getSelectedValue());
-      displayFlightDetails();
     });
   }
 
@@ -133,12 +133,12 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
 
       if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.READY_CLEAN_AND_MAINT) {
         aircraftManagementDatabase.setStatus(mrIndex, ManagementRecord.OK_AWAIT_CLEAN);
-        planeList.add(0, "Send aircraft to Cleaning Supervisor");
+        commentsList.addElement("Send aircraft to Cleaning Supervisor");
       }
 
       if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.AWAIT_REPAIR) {
         aircraftManagementDatabase.setStatus(mrIndex, ManagementRecord.READY_CLEAN_AND_MAINT);
-        planeList.add(0, "status: " + aircraftManagementDatabase.getStatus(mrIndex));
+        commentsList.addElement("status: " + aircraftManagementDatabase.getStatus(mrIndex));
       }
 
       if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.CLEAN_AWAIT_MAINT) {
@@ -149,18 +149,18 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
     if (e.getSource() == reportFaultsBtn) {
       if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.READY_CLEAN_AND_MAINT) {
         aircraftManagementDatabase.faultsFound(mrIndex, "Maintenance returned faults. Send aircraft to Cleaning Supervisor");
-        planeList.add(0, aircraftManagementDatabase.getFaultDescription(mrIndex));
+        commentsList.addElement(aircraftManagementDatabase.getFaultDescription(mrIndex));
         aircraftManagementDatabase.setStatus(mrIndex, ManagementRecord.FAULTY_AWAIT_CLEAN);
       }
 
       if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.FAULTY_AWAIT_CLEAN) {
-        planeList.removeAllElements();
-        planeList.add(0, "Send aircraft to Cleaning Supervisor");
+        commentsList.removeAllElements();
+        commentsList.addElement("Send aircraft to Cleaning Supervisor");
       }
 
       if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.CLEAN_AWAIT_MAINT) {
-        planeList.removeAllElements();
-        planeList.add(0, "Maintenance returned faults.");
+        commentsList.removeAllElements();
+        commentsList.addElement("Maintenance returned faults.");
       }
     }
 

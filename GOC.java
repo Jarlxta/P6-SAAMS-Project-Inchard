@@ -78,7 +78,7 @@ public class GOC extends JFrame implements Observer, ActionListener {
         createTextFields();
         // apply pattern
         this.aircraftManagementDatabase.addObserver(this);
-         this.gateInfoDatabase.addObserver(this);
+        this.gateInfoDatabase.addObserver(this);
         setVisible(true);
     }
 
@@ -183,9 +183,6 @@ public class GOC extends JFrame implements Observer, ActionListener {
             gatesAndStatus.addElement("Gate " + (i+1) + " - " + gateInfoDatabase.statusToText(gateInfoDatabase.getStatus(i)));
         }
     }
-
-
-
 
     //TODO : ADD STATUS TO BE SHOWN / COPY LATC METHOD FOR DISPLAY INFO
     /**
