@@ -167,12 +167,6 @@ public class AircraftManagementDatabase extends Observable {
   }
 
 
-//  public void isStatusChanged(){
-//    setChanged();
-//    notifyObservers();
-//  }
-
-
   public int findMrIndex(String fl) {
     for (int i = 0; i < maxMRs; i++) {
         if(Objects.equals(MRs[i].getFlightCode(), fl)) {
@@ -184,5 +178,9 @@ public class AircraftManagementDatabase extends Observable {
 
   public int getGate(int i) {
     return MRs[i].getGate()+1;
+  }
+
+  public String getFaultDescription(int i){
+    return MRs[i].getFaultDescription();
   }
 }

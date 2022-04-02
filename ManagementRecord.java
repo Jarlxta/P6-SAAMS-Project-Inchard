@@ -451,6 +451,10 @@ public class ManagementRecord {
     passengerList.addPassenger(details, status);
   }
 
+
+  public String getFaultDescription() {
+    return this.faultDescription;
+  }
   /** Return the entire current PassengerList.
    *  Will return NULL if the gate status is FREE
    *  @return

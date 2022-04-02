@@ -184,9 +184,7 @@ public class GOC extends JFrame implements Observer, ActionListener {
         }
     }
 
-//    public void updatePlaneDetails(){
-//        aircraftManagementDatabase.isStatusChanged();
-//    }
+
 
 
     //TODO : ADD STATUS TO BE SHOWN / COPY LATC METHOD FOR DISPLAY INFO
