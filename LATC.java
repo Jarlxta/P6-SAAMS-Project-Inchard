@@ -8,10 +8,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * An interface to SAAMS:
@@ -202,17 +200,24 @@ private AircraftManagementDatabase aMDatabase;
 
   @Override
   public void update(Observable o, Object arg) {
-    List<Integer> freeMCodes = aMDatabase.getWithStatus(0);
-    int maxMRs = 10;
+
+    // This set of statuses are the valid statuses to be shown in this interface.
+    // It covers all aircraft that are airborne within the airspace, or those that are imminently taking off.
+    List<Integer> validMCodes = aMDatabase.getWithStatus(1);
+    validMCodes.addAll(aMDatabase.getWithStatus(2));
+    validMCodes.addAll(aMDatabase.getWithStatus(3));
+    validMCodes.addAll(aMDatabase.getWithStatus(4));
+    validMCodes.addAll(aMDatabase.getWithStatus(15));
+    validMCodes.addAll(aMDatabase.getWithStatus(17));
+    validMCodes.addAll(aMDatabase.getWithStatus(18));
+
+
     planesIncoming.clear();
-    for (int i = 0; i < maxMRs; i ++){
-      if (!freeMCodes.contains(i)){
-        planesIncoming.addElement(aMDatabase.getFlightCode(i) + " - " + statuses.get(aMDatabase.getStatus(i)));
-      }
+    for (int i = 0; i < validMCodes.size(); i++){
+      planesIncoming.addElement(aMDatabase.getFlightCode(i) + " - " + statuses.get(aMDatabase.getStatus(i)));
     }
   }
 
-  // TODO : CHECK FROM AND TO (IF NEXT IS STIRLING THEN LAND ELSE DON'T)
   @Override
   public void valueChanged(ListSelectionEvent e) {
     if (e.getValueIsAdjusting()) {
