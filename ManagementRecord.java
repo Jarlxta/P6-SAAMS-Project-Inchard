@@ -120,7 +120,7 @@ public class ManagementRecord {
   /**
    * The gate number allocated to this aircraft, when there is one.
    */
-  private int gateNumber;
+  private int gateNumber = -1;
 
 /** A short string identifying the flight:
  *
@@ -466,6 +466,9 @@ public class ManagementRecord {
   *
   */
 
+  public String getFaultDescription() {
+    return this.faultDescription;
+  }
   public Itinerary getItinerary(){
     return itinerary;
   }

@@ -179,10 +179,15 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
 
     public void planeIndexForGate() {
         for (int i = 0; i < aircraftManagementDatabase.maxMRs; i++) {
-            if (aircraftManagementDatabase.getStatus(i) == ManagementRecord.TAXIING
+            if (aircraftManagementDatabase.getStatus(i) >= ManagementRecord.TAXIING
+                    && aircraftManagementDatabase.getStatus(i) <= ManagementRecord.DEPARTING_THROUGH_LOCAL_AIRSPACE
                     && aircraftManagementDatabase.getGate(i) == this.gateNumber) {
                 mCode = i;
                 displayInfoOnGate();
+            }
+            if(aircraftManagementDatabase.getStatus(i) ==ManagementRecord.DEPARTING_THROUGH_LOCAL_AIRSPACE)
+            {
+                removeInfoOnGate();
             }
         }
     }
@@ -190,7 +195,6 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
     public void displayInfoOnGate() {
         removeInfoOnGate();
         gateStatusTF.setText(gateInfoDatabase.statusToText(gateInfoDatabase.getStatus(gateNumber - 1)));
-        //TODO CREATE METHOD IN AMD statusToString
         planeStatusTF.setText(aircraftManagementDatabase.getStatus(mCode) + "");
         flightCodeTF.setText(aircraftManagementDatabase.getFlightCode(mCode));
         flightFromTF.setText(aircraftManagementDatabase.getItinerary(mCode).getFrom());
@@ -207,6 +211,8 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
         flightFromTF.setText("");
         flightToTF.setText("");
         nextStopTF.setText("");
+        noOfPassengersTF.setText("");
+        passengerNameTF.setText("");
     }
 
     @Override
@@ -240,6 +246,12 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
             if (plainIndexFromFlightCode() != null) {
                 plainIndexFromFlightCode().addPassenger(new PassengerDetails(passengerNameTF.getText()));
                 displayPassengers();
+            }
+        }
+
+        if (e.getSource() == flightReadyToDepartBtn) {
+            if (plainIndexFromFlightCode() != null) {
+                aircraftManagementDatabase.setStatus(mCode, ManagementRecord.READY_DEPART);
             }
         }
     }

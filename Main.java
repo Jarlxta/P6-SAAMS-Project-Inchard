@@ -31,6 +31,7 @@ public static void main(String[] args) {
   MaintenanceInspector maintenanceInspector = new MaintenanceInspector(aircraftManagementDatabase);
   CleaningSupervisor cleaningSupervisor = new CleaningSupervisor(aircraftManagementDatabase);
   RefuellingSupervisor refuellingSupervisor = new RefuellingSupervisor(aircraftManagementDatabase);
+  PublicInfo publicInfo = new PublicInfo(aircraftManagementDatabase);
 //  aircraftManagementDatabase.radarDetect(fl);
   }
 

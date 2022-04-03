@@ -33,6 +33,7 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
 
     private final JButton reportFaultsBtn = new JButton("Report Faults");
     private final JButton completeBtn = new JButton("Complete");
+    private final JButton completeRepairsBtn = new JButton("Complete Repairs");
 
     private final JTextArea reportFaults = new JTextArea();
 
@@ -88,6 +89,9 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
         completeBtn.setBounds(500, 275, 120, 30);
         add(completeBtn);
         completeBtn.addActionListener(this);
+        completeRepairsBtn.setBounds(500, 320, 120, 30);
+        add(completeRepairsBtn);
+        completeRepairsBtn.addActionListener(this);
     }
 
     public void initTextFields() {
@@ -111,6 +115,8 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
 
             if ( aircraftManagementDatabase.getStatus(i) == ManagementRecord.OK_AWAIT_CLEAN
                     || aircraftManagementDatabase.getStatus(i) == ManagementRecord.READY_REFUEL
+                    || aircraftManagementDatabase.getStatus(i) == ManagementRecord.FAULTY_AWAIT_CLEAN
+
             ) {
                 if(planesIncoming.contains(aircraftManagementDatabase.getFlightCode(i)))
                     planesIncoming.removeElement(aircraftManagementDatabase.getFlightCode(i));
@@ -133,8 +139,7 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
             }
 
             else if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.AWAIT_REPAIR) {
-                aircraftManagementDatabase.setStatus(mrIndex, ManagementRecord.READY_CLEAN_AND_MAINT);
-                logsList.addElement("status: " + aircraftManagementDatabase.getStatus(mrIndex));
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Please complete the repairs first and then complete the maintenance check");
             }
 
             else if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.CLEAN_AWAIT_MAINT) {
@@ -142,10 +147,26 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
             }
         }
 
+        if(e.getSource() == completeRepairsBtn) {
+            if(aircraftManagementDatabase.getStatus(mrIndex)==ManagementRecord.AWAIT_REPAIR) {
+                aircraftManagementDatabase.setStatus(mrIndex,ManagementRecord.READY_CLEAN_AND_MAINT);
+                logsList.addElement("Repairs complete, now clean or report further faults");
+            }
+            else {
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "There are no repairs required. Proceed with further checks or cleaning");
+            }
+        }
+
         if (e.getSource() == reportFaultsBtn) {
-            if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.READY_CLEAN_AND_MAINT) {
+            if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.READY_CLEAN_AND_MAINT
+            ) {
                 aircraftManagementDatabase.faultsFound(mrIndex, reportFaults.getText());
-                logsList.addElement(aircraftManagementDatabase.getFaultDescription(mrIndex));
+                logsList.addElement("The engineers reported : " + aircraftManagementDatabase.getFaultDescription(mrIndex) + "\n" +
+                        "Sending aircraft for Cleaning and back for second check after repairs");
+                reportFaults.setText("");
+            }
+            else if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.AWAIT_REPAIR) {
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "The aircraft needs to be repaired. Complete repairs and then complete");
             }
 
             else if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.FAULTY_AWAIT_CLEAN) {
@@ -154,8 +175,10 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
             }
 
             else if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.CLEAN_AWAIT_MAINT) {
-                logsList.removeAllElements();
-                logsList.addElement("Maintenance returned faults.");
+                aircraftManagementDatabase.faultsFound(mrIndex, reportFaults.getText());
+                logsList.addElement("The engineers reported : " + aircraftManagementDatabase.getFaultDescription(mrIndex) + "\n" +
+                        "Please complete the repairs and either recheck or clean");
+                reportFaults.setText("");
             }
         }
     }

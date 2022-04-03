@@ -145,18 +145,29 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
         add(leaveAirspace);
     }
 
-    // TOdo -> regex(validate.Flight)
     @Override
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == detectFlight) {
-            aircraftManagementDatabase.radarDetect(mapFdToMR());
-            displayPlanes();
+            if(!planeList.contains(flightCodeTF.getText())) {
+                aircraftManagementDatabase.radarDetect(mapFdToMR());
+                displayPlanes();
+            }
+            else {
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "This plane is already in the list");
+            }
         }
 
         if (e.getSource() == addPassenger) {
             addPassengerToMr();
             displayPassengers();
+        }
+
+        if(e.getSource() == leaveAirspace) {
+            if(aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.DEPARTING_THROUGH_LOCAL_AIRSPACE) {
+                planeList.removeElement(aircraftManagementDatabase.getFlightCode(mrIndex));
+                aircraftManagementDatabase.radarLostContact(mrIndex);
+            }
         }
     }
 
@@ -180,13 +191,13 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
     private void displayPassengers() {
         managementRecord = aircraftManagementDatabase.findMrFromFlightCode((String) currentPlanesTA.getSelectedValue());
         planePassengers.removeAllElements();
-        for (int i = 0; i < managementRecord.getPassengerList().getListLength(); i++) {
-            planePassengers.addElement(managementRecord.getPassengerList().getElement(i).getName());
+        if(managementRecord != null) {
+            for (int i = 0; i < managementRecord.getPassengerList().getListLength(); i++) {
+                planePassengers.addElement(managementRecord.getPassengerList().getElement(i).getName());
+            }
         }
     }
 
-    //TODO  APPLY THE SAME ON LATC AND GOC
-    //TODO ADD JOPTION PANE TO SHOW ERROR MESSAGE
     private void displayPlanes() {
         if(!planeList.contains(flightCodeTF.getText()))
         planeList.addElement(flightCodeTF.getText());
@@ -202,5 +213,12 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
     @Override
     public void update(Observable o, Object arg) {
         selectValue();
+        int maxMRs = 10;
+        planeList.removeAllElements();
+        for (int i = 0; i < maxMRs; i++) {
+            if (aircraftManagementDatabase.getStatus(i) != ManagementRecord.FREE) {
+                planeList.addElement(aircraftManagementDatabase.getFlightCode(i));
+            }
+        }
     }
 }

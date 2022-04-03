@@ -133,6 +133,7 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         if (e.getSource() == grantGroundClearance) {
             if (planesTF.getSelectedValue() != null) {
                 if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.WANTING_TO_LAND)
@@ -151,7 +152,13 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
         }
 
         if (e.getSource() == grantTaxiRunwayClearance) {
-            //TODO add checking for the taxi tarmac
+            if(planesTF.getSelectedValue() != null) {
+                if(aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.AWAITING_TAXI) // TODO: HANDLE TARMAC SPACE
+                {
+                  aircraftManagementDatabase.setStatus(mrIndex,ManagementRecord.AWAITING_TAKEOFF);
+                  gateInfoDatabase.departed(aircraftManagementDatabase.getGate(mrIndex));
+                }
+            }
         }
     }
 
@@ -179,7 +186,6 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
         }
     }
 
-
     public void displayGatesWithStatus() {
         gatesAndStatus.removeAllElements();
         for (int i = 0; i < 2; i++) {
@@ -205,6 +211,7 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
                     || aircraftManagementDatabase.getStatus(i) == ManagementRecord.LANDING
                     || aircraftManagementDatabase.getStatus(i) == ManagementRecord.LANDED
                     || aircraftManagementDatabase.getStatus(i) == ManagementRecord.TAXIING
+                    || aircraftManagementDatabase.getStatus(i) == ManagementRecord.AWAITING_TAXI
                     ) {
                 planesIncoming.addElement(aircraftManagementDatabase.getFlightCode(i));
             }
