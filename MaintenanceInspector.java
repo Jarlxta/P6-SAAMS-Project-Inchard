@@ -119,9 +119,7 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
     }
 
     public void selectValue() {
-        planesTA.addListSelectionListener(e -> {
-            mrIndex = aircraftManagementDatabase.findMrIndex((String) planesTA.getSelectedValue());
-        });
+        planesTA.addListSelectionListener(e -> mrIndex = aircraftManagementDatabase.findMrIndex((String) planesTA.getSelectedValue()));
     }
 
 
