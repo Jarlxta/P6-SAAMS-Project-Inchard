@@ -196,7 +196,7 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
 
     private void displayPlanes() {
         if(!planeList.contains(flightCodeTF.getText()))
-        planeList.addElement(flightCodeTF.getText());
+            planeList.addElement(flightCodeTF.getText());
     }
 
     public FlightDescriptor mapFdToMR() {

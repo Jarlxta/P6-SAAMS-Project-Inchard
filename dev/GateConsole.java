@@ -114,7 +114,7 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
         add(noOfPassengersLabel);
         passengerNameLabel.setBounds(180, 230, 150, 20);
         add(passengerNameLabel);
-
+        //
     }
 
     public void createButtons() {
