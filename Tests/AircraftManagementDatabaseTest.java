@@ -25,7 +25,7 @@ class AircraftManagementDatabaseTest {
         }
         List<PassengerDetails> passengers = new ArrayList<>();
         aircraftManagementDatabase = new AircraftManagementDatabase(MRs);
-        itinerary = new Itinerary("Stirling","Tokyo","Stirling");
+        itinerary = new Itinerary("Canada","Tokyo","Stirling");
         passengers.add(new PassengerDetails("Hunter"));
         passengers.add(new PassengerDetails("Cameron"));
         passengers.add(new PassengerDetails("Nick"));
