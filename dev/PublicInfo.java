@@ -79,7 +79,7 @@ public class PublicInfo extends JFrame implements Observer {
   }
   public void initiateGUI(Container win) {
     setLayout(new BorderLayout());
-    setLocation(1000, 800);
+    setLocation(600, 800);
     setSize(800, 223);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
   }

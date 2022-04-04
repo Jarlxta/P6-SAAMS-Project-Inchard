@@ -92,7 +92,7 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
         add(flightFrom);
         nextStop.setBounds(15, 130, 150, 20);
         add(nextStop);
-        passengerName.setBounds(15, 160, 150, 20);
+        passengerName.setBounds(15, 220, 150, 20);
         add(passengerName);
         currentPlanes.setBounds(500, 37, 150, 20);
         add(currentPlanes);
@@ -109,7 +109,7 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
         add(flightFromTF);
         nextStopTF.setBounds(140, 130, 180, 25);
         add(nextStopTF);
-        passengerNameTF.setBounds(140, 160, 180, 25);
+        passengerNameTF.setBounds(140, 220, 180, 25);
         add(passengerNameTF);
     }
 
@@ -117,7 +117,7 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
         setLayout(null);
         setTitle(RT);
         setBackground(Color.CYAN);
-        setLocation(500, 150);
+        setLocation(500, 0);
         setSize(850, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
@@ -132,10 +132,10 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
     }
 
     public void createButtons() {
-        addPassenger.setBounds(140, 190, 150, 30);
+        addPassenger.setBounds(140, 250, 150, 30);
         addPassenger.addActionListener(this);
         add(addPassenger);
-        detectFlight.setBounds(140, 220, 150, 30);
+        detectFlight.setBounds(140, 160, 150, 30);
         detectFlight.addActionListener(this);
         add(detectFlight);
         leaveAirspace.setBounds(480, 200, 150, 20);

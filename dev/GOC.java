@@ -126,7 +126,7 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
         setLayout(null);
         setTitle(GOC);
         setBackground(Color.CYAN);
-        setLocation(1200, 40);
+        setLocation(1350, 0);
         setSize(400, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }

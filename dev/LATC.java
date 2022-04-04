@@ -135,7 +135,7 @@ public class LATC extends JFrame implements Observer, ActionListener, ListSelect
   public void initiateGUI(Container win) {
     setLayout(null);
     setTitle(LATC_NAME);
-    setLocation(40, 40);
+    setLocation(0, 0);
     setSize(500, 500);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
   }

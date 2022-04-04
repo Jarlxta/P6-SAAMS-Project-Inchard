@@ -165,7 +165,8 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
         setLayout(null);
         setTitle(GATE + (gateNumber + 1));
         setBackground(Color.CYAN);
-        setLocation(40, 40);
+        int offset = 40 * gateNumber;
+        setLocation(0, (500 + offset));
         setSize(550, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }

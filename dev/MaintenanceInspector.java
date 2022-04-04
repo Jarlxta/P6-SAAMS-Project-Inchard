@@ -32,12 +32,15 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
     private final JButton completeRepairsBtn = new JButton("Complete Repairs");
 
     private final JTextArea reportFaults = new JTextArea();
+    private JScrollPane faultsScroll;
 
     private DefaultListModel<String> logsList = new DefaultListModel<>();
     private final JList logsTa = new JList(logsList);
-
+    private JScrollPane logScroll;
+    
     private DefaultListModel<String> planesIncoming = new DefaultListModel<>();
     private final JList planesTA = new JList(planesIncoming);
+    private JScrollPane planeScroll;
 
     /**
      * The Maintenance Inspector Screen interface has access to the dev.AircraftManagementDatabase.
@@ -64,7 +67,7 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
     public void initGui() {
         setLayout(null);
         setBackground(Color.CYAN);
-        setLocation(1150, 5);
+        setLocation(600, 400);
         setSize(750, 450);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
@@ -91,12 +94,15 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
     }
 
     public void initTextFields() {
-        planesTA.setBounds(5, 50, 150, 220);
-        add(planesTA);
-        reportFaults.setBounds(200, 50, 200,220);
-        add(reportFaults);
-        logsTa.setBounds(420, 50, 300, 220);
-        add(logsTa);
+    	planeScroll = new JScrollPane(planesTA);
+    	planeScroll.setBounds(5, 50, 150, 220);
+        add(planeScroll);
+        faultsScroll = new JScrollPane(reportFaults);
+        faultsScroll.setBounds(200, 50, 200,220);
+        add(faultsScroll);
+        logScroll = new JScrollPane(logsTa);
+        logScroll.setBounds(420, 50, 300, 220);
+        add(logScroll);
     }
 
     public void displayFlightDetails() {
