@@ -201,7 +201,7 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
         selectValue();
         displayGatesWithStatus();
         displayFlightDetails();
-
+//
         int maxMRs = 10;
         planesIncoming.removeAllElements();
         for (int i = 0; i < maxMRs; i++) {
