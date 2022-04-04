@@ -55,7 +55,7 @@ public class LATC extends JFrame implements Observer, ActionListener, ListSelect
    * @label accesses/observes
    * @directed*/
 
-  private AircraftManagementDatabase aMDatabase;
+  private final AircraftManagementDatabase aMDatabase;
 
 
   public LATC(AircraftManagementDatabase aircraftManagementDatabase) {

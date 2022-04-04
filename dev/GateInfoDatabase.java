@@ -124,13 +124,9 @@ public class GateInfoDatabase extends Observable {
      * Forward a status change request to the given gate identified by the gateNumber parameter. Called to indicate that the aircraft has departed and that the gate is now free.
      */
     public void departed(int gateNumber) {
-        try {
-            gates[gateNumber].departed();
-            setChanged();
-            notifyObservers();
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Cannot depart - dev.Gate: " + gateNumber + ", does not exist.");
-        }
+        gates[gateNumber].departed();
+        setChanged();
+        notifyObservers();
     }
 
     public int getManagementRecordFromGate(int i) {

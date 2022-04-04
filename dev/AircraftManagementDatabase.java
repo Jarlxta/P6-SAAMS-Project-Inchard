@@ -100,8 +100,8 @@ public class AircraftManagementDatabase extends Observable {
    * This operation finds a currently FREE MR and forwards the radarDetect request to it for recording.*/
 //  Todo : change the method to apply on arraylists.
   public void radarDetect(FlightDescriptor fd){
-    Arrays.stream(MRs).filter(
-                    available -> available.getStatus() == ManagementRecord.FREE)
+    Arrays.stream(MRs)
+            .filter(available -> available.getStatus() == ManagementRecord.FREE)
             .findFirst()
             .ifPresent(mr -> mr.radarDetect(fd));
     setChanged();
@@ -123,7 +123,6 @@ public class AircraftManagementDatabase extends Observable {
    * The message is forwarded to the given MR for status update.
    */
   public void taxiTo(int mCode, int gateNumber){
-    //todo check if the gate is free and set to reserved
     MRs[mCode].taxiTo(gateNumber);
     setChanged();
     notifyObservers();
@@ -179,7 +178,7 @@ public class AircraftManagementDatabase extends Observable {
   }
 
   public int getGate(int i) {
-    return MRs[i].getGate()+1;
+    return MRs[i].getGate();
   }
 
   public String getFaultDescription(int i){

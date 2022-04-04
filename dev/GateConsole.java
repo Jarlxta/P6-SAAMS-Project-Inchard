@@ -87,7 +87,7 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
         super(GATE);
         this.aircraftManagementDatabase = aircraftManagementDatabase;
         this.gateInfoDatabase = gateInfoDatabase;
-        this.gateNumber = gateNumber;
+        this.gateNumber = gateNumber -1;
         this.aircraftManagementDatabase.addObserver(this);
         this.gateInfoDatabase.addObserver(this);
         initiateGUI();
@@ -114,7 +114,6 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
         add(noOfPassengersLabel);
         passengerNameLabel.setBounds(180, 230, 150, 20);
         add(passengerNameLabel);
-        //
     }
 
     public void createButtons() {
@@ -164,7 +163,7 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
 
     public void initiateGUI() {
         setLayout(null);
-        setTitle(GATE + gateNumber);
+        setTitle(GATE + (gateNumber + 1));
         setBackground(Color.CYAN);
         setLocation(40, 40);
         setSize(550, 500);
@@ -181,12 +180,13 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
     public void planeIndexForGate() {
         for (int i = 0; i < aircraftManagementDatabase.maxMRs; i++) {
             if (aircraftManagementDatabase.getStatus(i) >= ManagementRecord.TAXIING
-                    && aircraftManagementDatabase.getStatus(i) <= ManagementRecord.DEPARTING_THROUGH_LOCAL_AIRSPACE
+                    && aircraftManagementDatabase.getStatus(i) < ManagementRecord.DEPARTING_THROUGH_LOCAL_AIRSPACE
                     && aircraftManagementDatabase.getGate(i) == this.gateNumber) {
                 mCode = i;
                 displayInfoOnGate();
             }
-            if(aircraftManagementDatabase.getStatus(i) ==ManagementRecord.DEPARTING_THROUGH_LOCAL_AIRSPACE)
+            if(aircraftManagementDatabase.getStatus(i)==ManagementRecord.DEPARTING_THROUGH_LOCAL_AIRSPACE
+                    && aircraftManagementDatabase.getGate(i) == this.gateNumber)
             {
                 removeInfoOnGate();
             }
@@ -195,7 +195,7 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
 
     public void displayInfoOnGate() {
         removeInfoOnGate();
-        gateStatusTF.setText(gateInfoDatabase.statusToText(gateInfoDatabase.getStatus(gateNumber - 1)));
+        gateStatusTF.setText(gateInfoDatabase.statusToText(gateInfoDatabase.getStatus(gateNumber)));
         planeStatusTF.setText(aircraftManagementDatabase.getStatus(mCode) + "");
         flightCodeTF.setText(aircraftManagementDatabase.getFlightCode(mCode));
         flightFromTF.setText(aircraftManagementDatabase.getItinerary(mCode).getFrom());
@@ -219,7 +219,6 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
     @Override
     public void update(Observable o, Object arg) {
         planeIndexForGate();
-//        plainIndexFromFlightCode();
     }
 
     private void displayPassengers() {
@@ -233,13 +232,15 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == planeDockedBtn) {
-            gateInfoDatabase.docked(gateNumber - 1);
+            gateInfoDatabase.docked(gateNumber);
             aircraftManagementDatabase.setStatus(mCode, ManagementRecord.UNLOADING);
             displayInfoOnGate();
         }
 
         if (e.getSource() == planeUnloadedBtn) {
             aircraftManagementDatabase.setStatus(mCode, ManagementRecord.READY_CLEAN_AND_MAINT);
+            aircraftManagementDatabase.getPassengerList(mCode).setListToEmpty();
+            displayPassengers();
             displayInfoOnGate();
         }
 
@@ -247,6 +248,7 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
             if (plainIndexFromFlightCode() != null) {
                 plainIndexFromFlightCode().addPassenger(new PassengerDetails(passengerNameTF.getText()));
                 displayPassengers();
+                noOfPassengersTF.setText(aircraftManagementDatabase.getPassengerList(mCode).getListLength() + "");
             }
         }
 

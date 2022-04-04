@@ -88,18 +88,15 @@ public class RefuellingSupervisor extends JFrame implements Observer, ActionList
     }
   }
 
-
   public void selectValue() {
     planesTA.addListSelectionListener(e -> mrIndex = aircraftManagementDatabase.findMrIndex((String) planesTA.getSelectedValue()));
   }
-
 
   @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == refuelPlaneBtn) {
       if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.READY_REFUEL) {
         aircraftManagementDatabase.setStatus(mrIndex, ManagementRecord.READY_PASSENGERS);
-
       }
     }
   }

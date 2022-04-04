@@ -164,8 +164,10 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
 
     public void selectValue() {
         planesTF.addListSelectionListener(e -> {
-            mrIndex = aircraftManagementDatabase.findMrIndex((String) planesTF.getSelectedValue());
-            displayFlightDetails();
+            if(planesTF.getSelectedValue() != null) {
+                mrIndex = aircraftManagementDatabase.findMrIndex((String) planesTF.getSelectedValue());
+                displayFlightDetails();
+            }
         });
 
         gateStatusTF.addListSelectionListener(e -> {
@@ -211,8 +213,7 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
                     || aircraftManagementDatabase.getStatus(i) == ManagementRecord.LANDING
                     || aircraftManagementDatabase.getStatus(i) == ManagementRecord.LANDED
                     || aircraftManagementDatabase.getStatus(i) == ManagementRecord.TAXIING
-                    || aircraftManagementDatabase.getStatus(i) == ManagementRecord.AWAITING_TAXI
-            ) {
+                    || aircraftManagementDatabase.getStatus(i) == ManagementRecord.AWAITING_TAXI) {
                 planesIncoming.addElement(aircraftManagementDatabase.getFlightCode(i));
             }
         }

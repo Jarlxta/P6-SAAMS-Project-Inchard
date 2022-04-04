@@ -126,9 +126,7 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
 
     public void addFaultDesc(){
         //TODO : push addElements
-        if(aircraftManagementDatabase.getFaultDescription(mrIndex) != null
-                && !logsList.contains(aircraftManagementDatabase.getFaultDescription(mrIndex)))
-            logsList.addElement("The engineers reported :" + aircraftManagementDatabase.getFaultDescription(mrIndex));
+            logsList.addElement("The engineers reported :" + reportFaults.getText());
     }
 
 
@@ -163,8 +161,9 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
         if (e.getSource() == reportFaultsBtn) {
             if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.READY_CLEAN_AND_MAINT) {
                 aircraftManagementDatabase.faultsFound(mrIndex, reportFaults.getText());
-                logsList.addElement("Sending aircraft for Cleaning and back for second check after repairs");
                 addFaultDesc();
+                logsList.addElement("Sending aircraft for Cleaning and back for second check after repairs");
+                reportFaults.setText("");
 
             }
             else if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.AWAIT_REPAIR) {
@@ -189,6 +188,5 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
     public void update(Observable o, Object arg) {
         selectValue();
         displayFlightDetails();
-        addFaultDesc();
     }
 }

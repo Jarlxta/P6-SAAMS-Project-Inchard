@@ -100,7 +100,7 @@ public class PublicInfo extends JFrame implements Observer {
         planeData.add(itinerary.getFrom());
         planeData.add(itinerary.getNext());
         planeData.add(itinerary.getTo());
-        planeData.add(db.getGate(i) == 0 ? "N/A" : Integer.toString(db.getGate(i)));
+        planeData.add(db.getGate(i) == -1 ? "N/A" : Integer.toString(db.getGate(i)+1));
         planeData.add(statuses.get(db.getStatus(i)));
 
         model.addRow(planeData.toArray());
