@@ -225,7 +225,7 @@ private AircraftManagementDatabase aMDatabase;
     if (e.getValueIsAdjusting()) {
       selectedPlane.clear();
       currentPlaneIndex = validMCodes.get(planesTF.getSelectedIndex());
-      selectedPlane.addElement(planesIncoming.get(currentPlaneIndex));
+      selectedPlane.addElement(planesIncoming.get(planesTF.getSelectedIndex()));
       selectedPlane.addElement("DEPARTED FROM: " + aMDatabase.getItinerary(currentPlaneIndex).getFrom());
       selectedPlane.addElement("CURRENT DESTINATION: " + aMDatabase.getItinerary(currentPlaneIndex).getNext());
       selectedPlane.addElement("FINAL DESTINATION: " + aMDatabase.getItinerary(currentPlaneIndex).getTo());
