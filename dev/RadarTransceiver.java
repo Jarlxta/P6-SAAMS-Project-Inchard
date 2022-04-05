@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * An interface to SAAMS:
@@ -50,7 +51,11 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
     private final JList currentPlanesTA = new JList(planeList);
     private final DefaultListModel<String> planePassengers = new DefaultListModel<>();
     private final JList planePassengersTa = new JList(planePassengers);
-
+	
+    private JScrollPane passengerNameJScroll;
+	private JScrollPane currentPlanesJScroll;
+	private JScrollPane planePassengersJScroll;
+	
     private final JButton addPassenger = new JButton("Add Passenger");
     private final JButton detectFlight = new JButton("Detect Flight");
     private final JButton leaveAirspace = new JButton("Leave Airspace");
@@ -58,6 +63,8 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
 
     ManagementRecord managementRecord;
     int mrIndex;
+    int numberOfPlanes = 0;
+    private Pattern flightPattern = Pattern.compile("[A-Z]{2}:[1-9][0-9]{3}|[1-9][0-9]{2}|[1-9][0-9]|[1-9]");
     /**
      * The Radar Transceiver interface has access to the dev.AircraftManagementDatabase.
      *
@@ -66,20 +73,20 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
      * @label accesses/observes
      * @directed
      */
-    private final AircraftManagementDatabase aircraftManagementDatabase;
+    private final AircraftManagementDatabase aMDatabase;
 
     // TODO : ADD EQUALS/HASHCODE TO MR AND FIX IF THE MR IS TRYING TO GET ADDED WITH SAME NAMES
     //        GENERALLY CHECK THE VALIDATION ON ADDS AS IT'S NOT TO THE FINAL STATE YET
     // TODO CHANGE THE NAME OF THE METHODS (E.G CREATE -> INIT)
     public RadarTransceiver(AircraftManagementDatabase aircraftManagementDatabase) {
         super(RT);
-        this.aircraftManagementDatabase = aircraftManagementDatabase;
+        this.aMDatabase = aircraftManagementDatabase;
         frame();
         createLabels();
         createTextFields();
         createTAs();
         createButtons();
-        this.aircraftManagementDatabase.addObserver(this);
+        this.aMDatabase.addObserver(this);
         setVisible(true);
     }
 
@@ -92,7 +99,7 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
         add(flightFrom);
         nextStop.setBounds(15, 130, 150, 20);
         add(nextStop);
-        passengerName.setBounds(15, 160, 150, 20);
+        passengerName.setBounds(15, 220, 150, 20);
         add(passengerName);
         currentPlanes.setBounds(500, 37, 150, 20);
         add(currentPlanes);
@@ -109,7 +116,7 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
         add(flightFromTF);
         nextStopTF.setBounds(140, 130, 180, 25);
         add(nextStopTF);
-        passengerNameTF.setBounds(140, 160, 180, 25);
+        passengerNameTF.setBounds(140, 220, 180, 25);
         add(passengerNameTF);
     }
 
@@ -117,25 +124,28 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
         setLayout(null);
         setTitle(RT);
         setBackground(Color.CYAN);
-        setLocation(500, 150);
+        setLocation(500, 0);
         setSize(850, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     public void createTAs() {
-        passengerNameTA.setBounds(335, 40, 125, 160);
-        add(passengerNameTA);
-        currentPlanesTA.setBounds(480, 55, 160, 125);
-        add(currentPlanesTA);
-        planePassengersTa.setBounds(680, 55, 140, 160);
-        add(planePassengersTa);
+        passengerNameJScroll = new JScrollPane(passengerNameTA); 
+        passengerNameJScroll.setBounds(335, 40, 125, 160);
+        add(passengerNameJScroll);
+        currentPlanesJScroll = new JScrollPane(currentPlanesTA); 
+        currentPlanesJScroll.setBounds(480, 55, 160, 125);
+        add(currentPlanesJScroll);
+        planePassengersJScroll = new JScrollPane(planePassengersTa); 
+        planePassengersJScroll.setBounds(680, 55, 140, 160);
+        add(planePassengersJScroll);
     }
 
     public void createButtons() {
-        addPassenger.setBounds(140, 190, 150, 30);
+    	addPassenger.setBounds(140, 250, 150, 30);
         addPassenger.addActionListener(this);
         add(addPassenger);
-        detectFlight.setBounds(140, 220, 150, 30);
+        detectFlight.setBounds(140, 160, 150, 30);
         detectFlight.addActionListener(this);
         add(detectFlight);
         leaveAirspace.setBounds(480, 200, 150, 20);
@@ -147,33 +157,54 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == detectFlight) {
-            if(!planeList.contains(flightCodeTF.getText())) {
-                aircraftManagementDatabase.radarDetect(mapFdToMR());
-                displayPlanes();
-            }
-            else {
-                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "This plane is already in the list");
-            }
+        	if(flightCodeTF.getText().isEmpty() || flightToTF.getText().isEmpty() ||
+             	   flightFromTF.getText().isEmpty() || nextStopTF.getText().isEmpty()) {
+             		JOptionPane.showMessageDialog(this, "Please fill in all plane fields.");
+             	}else {
+             		if(flightCodeTF.getText().matches("^[A-Z\\d]{2}[A-Z]?\\d{1,4}?$")) {
+                 		if(numberOfPlanes < aMDatabase.maxMRs) {
+                            if(!planeList.contains(flightCodeTF.getText())) {
+                                aMDatabase.radarDetect(mapFdToMR());
+                                displayPlanes();
+                                numberOfPlanes++;
+                            }
+                            else {
+                                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "This plane is already in the list");
+                            }
+                 		}else {
+                 			JOptionPane.showMessageDialog(this, "Stirling cannot accommodate more than 10 planes.");
+                 		}
+             		}else {
+             			JOptionPane.showMessageDialog(this, "Flight code must be a number, or one or two capital characters "
+             					+ "followed by 1-4 numbers. (F20, 5000 or PR101 for example)");
+             		}
+             	}
+             	return;
         }
 
         if (e.getSource() == addPassenger) {
-            addPassengerToMr();
-            displayPassengers();
+        	if(currentPlanesTA.getSelectedValue() != null) {
+                addPassengerToMr();
+                displayPassengers();
+        	}else {
+        		JOptionPane.showMessageDialog(this, "Please select an airplane to add passengers.");
+        	}
+        	return;
         }
 
         if(e.getSource() == leaveAirspace) {
-            if(aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.DEPARTING_THROUGH_LOCAL_AIRSPACE
-              || aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.IN_TRANSIT) {
-                System.out.println(aircraftManagementDatabase.getStatus(mrIndex));
-                aircraftManagementDatabase.radarLostContact(mrIndex);
-                planeList.removeElement(aircraftManagementDatabase.getFlightCode(mrIndex));
+            if(aMDatabase.getStatus(mrIndex) == ManagementRecord.DEPARTING_THROUGH_LOCAL_AIRSPACE
+              || aMDatabase.getStatus(mrIndex) == ManagementRecord.IN_TRANSIT) {
+                System.out.println(aMDatabase.getStatus(mrIndex));
+                aMDatabase.radarLostContact(mrIndex);
+                planeList.removeElement(aMDatabase.getFlightCode(mrIndex));
             }
         }
     }
 
     public void selectValue() {
         currentPlanesTA.addListSelectionListener(e -> {
-            mrIndex = aircraftManagementDatabase.findMrIndex((String) currentPlanesTA.getSelectedValue());
+            mrIndex = aMDatabase.findMrIndex((String) currentPlanesTA.getSelectedValue());
             displayPassengers();
         });
     }
@@ -181,15 +212,15 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
     //todo: replace length 10 with getSize from amdb (create method in there)
     //
     private void addPassengerToMr() {
-        if (aircraftManagementDatabase.getFlightCode(mrIndex) != null) {
-            if (aircraftManagementDatabase.getFlightCode(mrIndex).equals(currentPlanesTA.getSelectedValue())) {
-                aircraftManagementDatabase.addPassenger(mrIndex, new PassengerDetails(passengerNameTF.getText()));
+        if (aMDatabase.getFlightCode(mrIndex) != null) {
+            if (aMDatabase.getFlightCode(mrIndex).equals(currentPlanesTA.getSelectedValue())) {
+                aMDatabase.addPassenger(mrIndex, new PassengerDetails(passengerNameTF.getText()));
             }
         }
     }
 
     private void displayPassengers() {
-        managementRecord = aircraftManagementDatabase.findMrFromFlightCode((String) currentPlanesTA.getSelectedValue());
+        managementRecord = aMDatabase.findMrFromFlightCode((String) currentPlanesTA.getSelectedValue());
         planePassengers.removeAllElements();
         if(managementRecord != null) {
             for (int i = 0; i < managementRecord.getPassengerList().getListLength(); i++) {
@@ -217,8 +248,8 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
         int maxMRs = 10;
         planeList.removeAllElements();
         for (int i = 0; i < maxMRs; i++) {
-            if (aircraftManagementDatabase.getStatus(i) != ManagementRecord.FREE) {
-                planeList.addElement(aircraftManagementDatabase.getFlightCode(i));
+            if (aMDatabase.getStatus(i) != ManagementRecord.FREE) {
+                planeList.addElement(aMDatabase.getFlightCode(i));
             }
         }
     }

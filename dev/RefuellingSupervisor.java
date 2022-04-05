@@ -36,6 +36,7 @@ public class RefuellingSupervisor extends JFrame implements Observer, ActionList
   private final JLabel planesBeingRefuelledLabel = new JLabel("Planes Being Refuelled");
   private final DefaultListModel<String> planesIncoming = new DefaultListModel<>();
   private final JList planesTA = new JList(planesIncoming);
+  private JScrollPane planeScroll;
   private final JButton refuelPlaneBtn = new JButton("Plane is Refuelled");
 
   int mrIndex;
@@ -52,19 +53,20 @@ public class RefuellingSupervisor extends JFrame implements Observer, ActionList
   public void intiGui() {
     setLayout(null);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
-    setSize(360, 290);
-    setLocation(700, 600);
+    setSize(250, 315);
+    setLocation(1650, 500);
     setBackground(Color.LIGHT_GRAY);
     setResizable(false);
     setTitle(REFUELLING_SUPERVISOR);
 
-    planesBeingRefuelledLabel.setBounds(10, 5, 150, 20);
+    planesBeingRefuelledLabel.setBounds(45, 5, 150, 20);
     add(planesBeingRefuelledLabel);
 
-    planesTA.setBounds(15, 25, 150, 230);
-    add(planesTA);
+    planeScroll = new JScrollPane(planesTA);
+    planeScroll.setBounds(15, 25, 200, 200);
+    add(planeScroll);
 
-    refuelPlaneBtn.setBounds(170, 25, 150, 20);
+    refuelPlaneBtn.setBounds(15, 230, 200, 30);
     refuelPlaneBtn.addActionListener(this);
     add(refuelPlaneBtn);
   }
