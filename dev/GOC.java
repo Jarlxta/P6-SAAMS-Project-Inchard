@@ -45,7 +45,10 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
     private final JList planesTF = new JList(planesIncoming);
     private final DefaultListModel<String> gatesAndStatus = new DefaultListModel<>();
     private final JList gateStatusTF = new JList(gatesAndStatus);
-
+    
+    private JScrollPane planeDetailsScroll;
+    private JScrollPane planesScroll;
+    private JScrollPane gateStatusScroll;
     /**
      * The Ground Operations Controller Screen interface has access to the dev.GateInfoDatabase.
      *
@@ -67,11 +70,11 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
      * @label accesses/observes
      * @directed
      */
-    private final AircraftManagementDatabase aircraftManagementDatabase;
+    private final AircraftManagementDatabase aMDatabase;
 
     public GOC(AircraftManagementDatabase aircraftManagementDatabase, GateInfoDatabase gateInfoDatabase) {
         super(GOC);
-        this.aircraftManagementDatabase = aircraftManagementDatabase;
+        this.aMDatabase = aircraftManagementDatabase;
         this.gateInfoDatabase = gateInfoDatabase;
         // gui instantiation
         initiateGUI();
@@ -79,7 +82,7 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
         createButtons();
         createTextFields();
         // apply pattern
-        this.aircraftManagementDatabase.addObserver(this);
+        this.aMDatabase.addObserver(this);
         this.gateInfoDatabase.addObserver(this);
         setVisible(true);
     }
@@ -112,21 +115,22 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
     }
 
     public void createTextFields() {
-        planesTF.setVisible(true);
-        planesTF.setBounds(5, 45, 160, 180);
-        planesTF.addFocusListener(this);
-        add(planesTF);
-        planeDetailsTF.setBounds(170, 310, 200, 150);
-        add(planeDetailsTF);
-        gateStatusTF.setBounds(5, 260, 160, 180);
-        add(gateStatusTF);
+        planesScroll = new JScrollPane(planesTF);
+        planesScroll.setBounds(5, 45, 160, 180);
+        add(planesScroll);
+        planeDetailsScroll = new JScrollPane(planeDetailsTF);
+        planeDetailsScroll.setBounds(170, 310, 200, 150);
+        add(planeDetailsScroll);
+        gateStatusScroll = new JScrollPane(gateStatusTF);
+        gateStatusScroll.setBounds(5, 260, 160, 180);
+        add(gateStatusScroll);
     }
 
     public void initiateGUI() {
         setLayout(null);
         setTitle(GOC);
         setBackground(Color.CYAN);
-        setLocation(1200, 40);
+        setLocation(1350, 0);
         setSize(400, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
@@ -136,27 +140,38 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
 
         if (e.getSource() == grantGroundClearance) {
             if (planesTF.getSelectedValue() != null) {
-                if (aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.WANTING_TO_LAND)
-                    aircraftManagementDatabase.setStatus(mrIndex, ManagementRecord.GROUND_CLEARANCE_GRANTED);
+                if (aMDatabase.getStatus(mrIndex) == ManagementRecord.WANTING_TO_LAND)
+                    aMDatabase.setStatus(mrIndex, ManagementRecord.GROUND_CLEARANCE_GRANTED);
+            }else {
+            	JOptionPane.showMessageDialog(this, "Please select an airplane.");
             }
         }
 
         if (e.getSource() == taxiToGate) {
             if(planesTF.getSelectedValue() != null) {
-                if(aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.LANDED
-                        && gateInfoDatabase.getStatus(gateIndex)== Gate.FREE){
-                    aircraftManagementDatabase.taxiTo(mrIndex,gateIndex);
-                    gateInfoDatabase.allocate(gateIndex,mrIndex);
-                }
+            	if(gateStatusTF.getSelectedValue() != null) {
+	                if(aMDatabase.getStatus(mrIndex) == ManagementRecord.LANDED
+	                        && gateInfoDatabase.getStatus(gateIndex)== Gate.FREE){
+	                    aMDatabase.taxiTo(mrIndex,gateIndex);
+
+	                    gateInfoDatabase.allocate(gateIndex,mrIndex);
+	                }else {
+	                	JOptionPane.showMessageDialog(this, "Selected plane must have status: LANDED.");
+	                }
+            	}else {
+            		JOptionPane.showMessageDialog(this, "Please select a gate.");
+            	}
+            }else {
+            	JOptionPane.showMessageDialog(this, "Please select an airplane.");
             }
         }
 
         if (e.getSource() == grantTaxiRunwayClearance) {
             if(planesTF.getSelectedValue() != null) {
-                if(aircraftManagementDatabase.getStatus(mrIndex) == ManagementRecord.AWAITING_TAXI) // TODO: HANDLE TARMAC SPACE
+                if(aMDatabase.getStatus(mrIndex) == ManagementRecord.AWAITING_TAXI) // TODO: HANDLE TARMAC SPACE
                 {
-                    aircraftManagementDatabase.setStatus(mrIndex,ManagementRecord.AWAITING_TAKEOFF);
-                    gateInfoDatabase.departed(aircraftManagementDatabase.getGate(mrIndex));
+                    aMDatabase.setStatus(mrIndex,ManagementRecord.AWAITING_TAKEOFF);
+                    gateInfoDatabase.departed(aMDatabase.getGate(mrIndex));
                 }
             }
         }
@@ -165,7 +180,7 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
     public void selectValue() {
         planesTF.addListSelectionListener(e -> {
             if(planesTF.getSelectedValue() != null) {
-                mrIndex = aircraftManagementDatabase.findMrIndex((String) planesTF.getSelectedValue());
+                mrIndex = aMDatabase.findMrIndex((String) planesTF.getSelectedValue());
                 displayFlightDetails();
             }
         });
@@ -180,11 +195,11 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
     public void displayFlightDetails() {
         if (planesTF.getSelectedValue() != null) {
             selectedPlane.removeAllElements();
-            selectedPlane.addElement("FlIGHT CODE : " + aircraftManagementDatabase.getFlightCode(mrIndex));
-            selectedPlane.addElement("STATUS : " + aircraftManagementDatabase.getStatus(mrIndex));
-            selectedPlane.addElement("DEPARTED FROM: " + aircraftManagementDatabase.getItinerary(mrIndex).getFrom());
-            selectedPlane.addElement("CURRENT DESTINATION: " + aircraftManagementDatabase.getItinerary(mrIndex).getTo());
-            selectedPlane.addElement("FINAL DESTINATION: " + aircraftManagementDatabase.getItinerary(mrIndex).getNext());
+            selectedPlane.addElement("FlIGHT CODE : " + aMDatabase.getFlightCode(mrIndex));
+            selectedPlane.addElement("STATUS : " + aMDatabase.statusAsText(aMDatabase.getStatus(mrIndex)));
+            selectedPlane.addElement("DEPARTED FROM: " + aMDatabase.getItinerary(mrIndex).getFrom());
+            selectedPlane.addElement("CURRENT DESTINATION: " + aMDatabase.getItinerary(mrIndex).getTo());
+            selectedPlane.addElement("FINAL DESTINATION: " + aMDatabase.getItinerary(mrIndex).getNext());
         }
     }
 
@@ -208,13 +223,13 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
         int maxMRs = 10;
         planesIncoming.removeAllElements();
         for (int i = 0; i < maxMRs; i++) {
-            if (aircraftManagementDatabase.getStatus(i) == 2
-                    || aircraftManagementDatabase.getStatus(i) == ManagementRecord.GROUND_CLEARANCE_GRANTED
-                    || aircraftManagementDatabase.getStatus(i) == ManagementRecord.LANDING
-                    || aircraftManagementDatabase.getStatus(i) == ManagementRecord.LANDED
-                    || aircraftManagementDatabase.getStatus(i) == ManagementRecord.TAXIING
-                    || aircraftManagementDatabase.getStatus(i) == ManagementRecord.AWAITING_TAXI) {
-                planesIncoming.addElement(aircraftManagementDatabase.getFlightCode(i));
+            if (aMDatabase.getStatus(i) == 2
+                    || aMDatabase.getStatus(i) == ManagementRecord.GROUND_CLEARANCE_GRANTED
+                    || aMDatabase.getStatus(i) == ManagementRecord.LANDING
+                    || aMDatabase.getStatus(i) == ManagementRecord.LANDED
+                    || aMDatabase.getStatus(i) == ManagementRecord.TAXIING
+                    || aMDatabase.getStatus(i) == ManagementRecord.AWAITING_TAXI) {
+                planesIncoming.addElement(aMDatabase.getFlightCode(i));
             }
         }
     }
