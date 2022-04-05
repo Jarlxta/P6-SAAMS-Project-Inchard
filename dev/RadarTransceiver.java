@@ -64,7 +64,6 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
     ManagementRecord managementRecord;
     int mrIndex;
     int numberOfPlanes = 0;
-    private Pattern flightPattern = Pattern.compile("[A-Z]{2}:[1-9][0-9]{3}|[1-9][0-9]{2}|[1-9][0-9]|[1-9]");
     /**
      * The Radar Transceiver interface has access to the dev.AircraftManagementDatabase.
      *

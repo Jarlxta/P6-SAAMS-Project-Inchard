@@ -82,6 +82,7 @@ public class CleaningSupervisor extends JFrame implements Observer, ActionListen
     button.setVisible(true);
     
     displayPlanes.setBorder(BorderFactory.createLineBorder(blueberry, 1));
+    displayPlanes.addListSelectionListener(this);
     planeScroll = new JScrollPane(displayPlanes);
     planeScroll.setBounds(5, 20, 260, 300);
 

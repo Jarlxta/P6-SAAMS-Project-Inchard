@@ -196,16 +196,15 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
 
     public void displayInfoOnGate() {
     	try {
-    		removeInfoOnGate();
-	        gateStatusTF.setText(gateInfoDatabase.statusToText(gateInfoDatabase.getStatus(gateNumber - 1)));
-	        //TODO CREATE METHOD IN AMD statusToString
-	        planeStatusTF.setText(aMDatabase.statusAsText(aMDatabase.getStatus(mCode)) + "");
-	        flightCodeTF.setText(aMDatabase.getFlightCode(mCode));
-	        flightFromTF.setText(aMDatabase.getItinerary(mCode).getFrom());
-	        flightToTF.setText(aMDatabase.getItinerary(mCode).getTo());
-	        nextStopTF.setText(aMDatabase.getItinerary(mCode).getNext());
-	        noOfPassengersTF.setText(aMDatabase.getPassengerList(mCode).getListLength() + "");
-	        displayPassengers();
+            removeInfoOnGate();
+            gateStatusTF.setText(gateInfoDatabase.statusToText(gateInfoDatabase.getStatus(gateNumber)));
+            planeStatusTF.setText(aMDatabase.getStatus(mCode) + "");
+            flightCodeTF.setText(aMDatabase.getFlightCode(mCode));
+            flightFromTF.setText(aMDatabase.getItinerary(mCode).getFrom());
+            flightToTF.setText(aMDatabase.getItinerary(mCode).getTo());
+            nextStopTF.setText(aMDatabase.getItinerary(mCode).getNext());
+            noOfPassengersTF.setText(aMDatabase.getPassengerList(mCode).getListLength() + "");
+            displayPassengers();
     	}catch(java.lang.NullPointerException e) {
     		removeInfoOnGate();
     		JOptionPane.showMessageDialog(this, "There are no planes at this gate yet, consult ground controller.");
@@ -239,10 +238,10 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == planeDockedBtn) {
-        	if(gateInfoDatabase.getStatus(gateNumber - 1) == 1) {
-                gateInfoDatabase.docked(gateNumber - 1);
+        	if(gateInfoDatabase.getStatus(gateNumber) == 1) {
+                gateInfoDatabase.docked(gateNumber);
                 aMDatabase.setStatus(mCode, ManagementRecord.UNLOADING);
-                displayInfoOnGate();		
+                displayInfoOnGate();	
         	}else {
         		JOptionPane.showMessageDialog(this, "Gate must be reserved through ground controller panel.");
         	}
@@ -250,9 +249,11 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
         }
 
         if (e.getSource() == planeUnloadedBtn) {
-        	if(gateInfoDatabase.getStatus(gateNumber - 1) == 2) {
-	            aMDatabase.setStatus(mCode, ManagementRecord.READY_CLEAN_AND_MAINT);
-	            displayInfoOnGate();
+        	if(gateInfoDatabase.getStatus(gateNumber) == 2) {
+        		aMDatabase.setStatus(mCode, ManagementRecord.READY_CLEAN_AND_MAINT);
+        		aMDatabase.getPassengerList(mCode).setListToEmpty();
+                displayPassengers();
+                displayInfoOnGate();
         	}else {
         		JOptionPane.showMessageDialog(this, "Gate must be occupied, "
         				+ "press the docked button after gate has been reserved through ground controller.");
@@ -267,6 +268,7 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
 	            if (plainIndexFromFlightCode() != null) {
 	                plainIndexFromFlightCode().addPassenger(new PassengerDetails(passengerNameTF.getText()));
 	                displayPassengers();
+	                noOfPassengersTF.setText(aMDatabase.getPassengerList(mCode).getListLength() + "");
 	            }	
         	}
         	return;

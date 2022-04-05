@@ -105,6 +105,7 @@ public class LATC extends JFrame implements Observer, ActionListener, ListSelect
   }
 
   public void createTextFields() {
+	planesTF.addListSelectionListener(this);
     planesTFScroll = new JScrollPane(planesTF);
     planesTFScroll.setBounds(5, 45, 260, 410);
     add(planesTFScroll);
@@ -196,7 +197,6 @@ public class LATC extends JFrame implements Observer, ActionListener, ListSelect
     validMCodes.addAll(aMDatabase.getWithStatus(15));
     validMCodes.addAll(aMDatabase.getWithStatus(17));
     validMCodes.addAll(aMDatabase.getWithStatus(18));
-
 
     planesIncoming.clear();
     for (int i = 0; i < validMCodes.size(); i++){

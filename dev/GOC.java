@@ -115,6 +115,7 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
     }
 
     public void createTextFields() {
+    	planesTF.addFocusListener(this);
         planesScroll = new JScrollPane(planesTF);
         planesScroll.setBounds(5, 45, 160, 180);
         add(planesScroll);
@@ -150,11 +151,13 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
         if (e.getSource() == taxiToGate) {
             if(planesTF.getSelectedValue() != null) {
             	if(gateStatusTF.getSelectedValue() != null) {
-	                if(aMDatabase.getStatus(mrIndex) == ManagementRecord.LANDED
-	                        && gateInfoDatabase.getStatus(gateIndex)== Gate.FREE){
-	                    aMDatabase.taxiTo(mrIndex,gateIndex);
-
-	                    gateInfoDatabase.allocate(gateIndex,mrIndex);
+	                if(aMDatabase.getStatus(mrIndex) == ManagementRecord.LANDED){
+	                	if(gateInfoDatabase.getStatus(gateIndex)== Gate.FREE) {
+		                    aMDatabase.taxiTo(mrIndex,gateIndex);
+		                    gateInfoDatabase.allocate(gateIndex,mrIndex);	
+	                	}else {
+	                		JOptionPane.showMessageDialog(this, "Gate is currently occupied by another plane.");
+	                	}
 	                }else {
 	                	JOptionPane.showMessageDialog(this, "Selected plane must have status: LANDED.");
 	                }
