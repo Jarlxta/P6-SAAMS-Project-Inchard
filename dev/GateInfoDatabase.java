@@ -32,17 +32,22 @@ public class GateInfoDatabase extends Observable {
      * @link aggregationByValue
      * @supplierCardinality 0..*
      */
-    private Gate[] gates = new Gate[maxGateNumber];
+    private Gate[] gates;
 
     /*
      * Constructor, instantiates the gates
      * Status is free by default when gate is created
      */
     public GateInfoDatabase() {
+        gates =new Gate[maxGateNumber];
         for (int i = 0; i < maxGateNumber; i++) {
             gates[i] = new Gate();
         }
+    }
 
+
+    public GateInfoDatabase(Gate[] gates) {
+        this.gates = gates;
     }
 
     /**
@@ -131,6 +136,10 @@ public class GateInfoDatabase extends Observable {
 
     public int getManagementRecordFromGate(int i) {
         return gates[i].getMCode();
+    }
+
+    public void setStatusDebug(int gate,int newStatus) {
+        gates[gate].setStatusTestingMethod(newStatus);
     }
 
     public String statusToText(int status) {
