@@ -42,6 +42,7 @@ public class CleaningSupervisor extends JFrame implements Observer, ActionListen
   private JLabel label;
   private DefaultListModel<String> planesList = new DefaultListModel<>();
   private JList displayPlanes;
+  private JScrollPane planeScroll;
   private Vector<String> items = new Vector<String>();
   private List<String> statuses;
   private int currentPlaneIndex;
@@ -51,10 +52,11 @@ public class CleaningSupervisor extends JFrame implements Observer, ActionListen
     super("Cleaning Supervisor");
     this.currentPlaneIndex = -1;
     this.setLayout(null);
-    this.setSize(500, 500);
+    this.setSize(290, 415);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     addGUI();
     this.setVisible(true);
+    this.setLocation(1350, 500);
 
     this.db = db;
     this.db.addObserver(this);
@@ -76,15 +78,16 @@ public class CleaningSupervisor extends JFrame implements Observer, ActionListen
 
     label.setBounds(100, 5, 100, 15);
     label.setVisible(true);
-    button.setBounds(270, 45, 200, 30);
+    button.setBounds(5, 330, 260, 30);
     button.setVisible(true);
-    displayPlanes.setBounds(5, 20, 260, 435);
+    
     displayPlanes.setBorder(BorderFactory.createLineBorder(blueberry, 1));
     displayPlanes.addListSelectionListener(this);
-    displayPlanes.setVisible(true);
+    planeScroll = new JScrollPane(displayPlanes);
+    planeScroll.setBounds(5, 20, 260, 300);
 
     add(label);
-    add(displayPlanes);
+    add(planeScroll);
     add(button);
 
     button.addActionListener(this);

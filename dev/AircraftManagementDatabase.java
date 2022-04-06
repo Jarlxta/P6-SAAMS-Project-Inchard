@@ -24,13 +24,38 @@ import java.util.*;
  */
 public class AircraftManagementDatabase extends Observable {
 
-  //TODO : CHECK IF THE
+	/**
+	 * List of statuses in their string form 
+	 * (moved from LATC to here to reduce duplicate code).
+	 */
+	  public List<String> statuses;
 
   public AircraftManagementDatabase() {
     this.MRs = new ManagementRecord[maxMRs];
     for (int i = 0; i < maxMRs; i++) {
       MRs[i] = new ManagementRecord();
     }
+
+    statuses = new ArrayList<String>();
+    statuses.add("FREE");
+    statuses.add("IN TRANSIT");
+    statuses.add("WANTING_TO_LAND");
+    statuses.add("GROUND_CLEARANCE_GRANTED");
+    statuses.add("LANDING");
+    statuses.add("LANDED");
+    statuses.add("TAXXING");
+    statuses.add("UNLOADING");
+    statuses.add("READY_CLEAN_AND_MAINT");
+    statuses.add("FAULTY_AWAITING_CLEAN");
+    statuses.add("CLEAN_AWAIT_MAINT");
+    statuses.add("OK_AWAIT_CLEAN");
+    statuses.add("AWAIT_REPAIR");
+    statuses.add("READY_REFUEL");
+    statuses.add("READY_PASSENGERS");
+    statuses.add("READY_DEPART");
+    statuses.add("AWAITING_TAXI");
+    statuses.add("AWAITING_TAKEOFF");
+    statuses.add("DEPARTING_THROUGH_LOCAL_AIRSPACE");
   }
 
   public AircraftManagementDatabase(ManagementRecord[] mRs) {
@@ -62,7 +87,7 @@ public class AircraftManagementDatabase extends Observable {
    * The size of the array MRs holding ManagementRecords.<br /><br />In this simple system 10 will do!
    */
   public int maxMRs = 10;
-
+  
   /**
    * Forward a status change request to the MR given by the mCode supplied as a parameter. Parameter newStatus is the requested new status. No effect is expected if the current status is not a valid preceding status. This operation is appropriate when the status change does not need any additional information to be noted. It is present instead of a large collection of public operations for requesting specific status changes.
    */
@@ -191,5 +216,26 @@ public class AircraftManagementDatabase extends Observable {
 
   public String getFaultDescription(int i){
     return MRs[i].getFaultDescription();
+  }
+
+  public void unMapGateFromMr(int mrCode){
+    MRs[mrCode].unMapGateFromMr();
+  }
+  
+  /*
+   * Displays readable information rather than an integer on the GUI.
+   * Takes in mCode and status integer
+   * Returns status string
+   */
+  public String statusAsText(int statusCode) {
+	  int i = 0;
+	  for(String s : statuses) {
+		  if(statusCode == i) {
+			  return s;
+		  }
+		  i+=1;
+	  }
+	  return "Error";
+
   }
 }
