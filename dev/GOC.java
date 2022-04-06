@@ -175,6 +175,7 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
                 {
                     aMDatabase.setStatus(mrIndex,ManagementRecord.AWAITING_TAKEOFF);
                     gateInfoDatabase.departed(aMDatabase.getGate(mrIndex));
+                    aMDatabase.unMapGateFromMr(mrIndex);
                 }else {
                 	JOptionPane.showMessageDialog(this, "Plane must be awaiting taxi");
                 }

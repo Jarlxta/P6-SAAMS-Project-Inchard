@@ -209,6 +209,10 @@ public class AircraftManagementDatabase extends Observable {
   public String getFaultDescription(int i){
     return MRs[i].getFaultDescription();
   }
+
+  public void unMapGateFromMr(int mrCode){
+    MRs[mrCode].unMapGateFromMr();
+  }
   
   /*
    * Displays readable information rather than an integer on the GUI.

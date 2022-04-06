@@ -479,4 +479,8 @@ public class ManagementRecord {
   public int getGate() {
     return gateNumber;
   }
+
+  public void unMapGateFromMr(){
+    this.gateNumber = -1;
+  }
 }
