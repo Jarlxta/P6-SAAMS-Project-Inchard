@@ -184,6 +184,7 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
         if (e.getSource() == addPassenger) {
         	if(currentPlanesTA.getSelectedValue() != null) {
                 addPassengerToMr();
+                passengerNameTF.setText("");
                 displayPassengers();
         	}else {
         		JOptionPane.showMessageDialog(this, "Please select an airplane to add passengers.");
@@ -196,6 +197,8 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
               || aMDatabase.getStatus(mrIndex) == ManagementRecord.IN_TRANSIT) {
                 aMDatabase.radarLostContact(mrIndex);
                 planeList.removeElement(aMDatabase.getFlightCode(mrIndex));
+            } else {
+            	JOptionPane.showMessageDialog(this, "Cannot leave airspace as plane as requested to land.");
             }
         }
     }

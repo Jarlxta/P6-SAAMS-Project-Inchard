@@ -90,13 +90,13 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
     public void createLabels() {
         planesJL.setBounds(5, 20, 150, 20);
         add(planesJL);
-        controls.setBounds(230, 40, 100, 20);
+        controls.setBounds(260, 40, 100, 20);
         add(controls);
-        inbounds.setBounds(230, 65, 100, 20);
+        inbounds.setBounds(260, 65, 100, 20);
         add(inbounds);
-        outBound.setBounds(230, 175, 100, 20);
+        outBound.setBounds(260, 175, 100, 20);
         add(outBound);
-        planeDetails.setBounds(230, 285, 100, 20);
+        planeDetails.setBounds(260, 285, 100, 20);
         add(planeDetails);
         gateStatus.setBounds(5, 240, 150, 20);
         add(gateStatus);
@@ -104,13 +104,13 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
 
     public void createButtons() {
         grantGroundClearance.addActionListener(this);
-        grantGroundClearance.setBounds(170, 90, 200, 30);
+        grantGroundClearance.setBounds(170, 90, 230, 30);
         add(grantGroundClearance);
         taxiToGate.addActionListener(this);
-        taxiToGate.setBounds(170, 125, 200, 30);
+        taxiToGate.setBounds(170, 125, 230, 30);
         add(taxiToGate);
         grantTaxiRunwayClearance.addActionListener(this);
-        grantTaxiRunwayClearance.setBounds(170, 245, 200, 30);
+        grantTaxiRunwayClearance.setBounds(170, 245, 230, 30);
         add(grantTaxiRunwayClearance);
     }
 
@@ -120,7 +120,7 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
         planesScroll.setBounds(5, 45, 160, 180);
         add(planesScroll);
         planeDetailsScroll = new JScrollPane(planeDetailsTF);
-        planeDetailsScroll.setBounds(170, 310, 200, 150);
+        planeDetailsScroll.setBounds(170, 310, 230, 150);
         add(planeDetailsScroll);
         gateStatusScroll = new JScrollPane(gateStatusTF);
         gateStatusScroll.setBounds(5, 260, 160, 180);
@@ -132,7 +132,7 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
         setTitle(GOC);
         setBackground(Color.CYAN);
         setLocation(1350, 0);
-        setSize(400, 500);
+        setSize(430, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 

@@ -82,13 +82,13 @@ public class MaintenanceInspector extends JFrame implements Observer, ActionList
     }
 
     public void initButtons() {
-        reportFaultsBtn.setBounds(220, 275, 120, 30);
+        reportFaultsBtn.setBounds(220, 275, 150, 30);
         add(reportFaultsBtn);
         reportFaultsBtn.addActionListener(this);
-        completeBtn.setBounds(500, 275, 120, 30);
+        completeBtn.setBounds(500, 275, 150, 30);
         add(completeBtn);
         completeBtn.addActionListener(this);
-        completeRepairsBtn.setBounds(500, 320, 120, 30);
+        completeRepairsBtn.setBounds(500, 320, 150, 30);
         add(completeRepairsBtn);
         completeRepairsBtn.addActionListener(this);
     }
