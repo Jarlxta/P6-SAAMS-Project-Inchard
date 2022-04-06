@@ -191,9 +191,8 @@ public class ManagementRecord {
             status = newStatus;
           }
           else {
-            System.out.println("case0");
-            System.out.println("current status" + status);
-            System.out.println("new status" + newStatus);
+            System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+
             JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
           }
           break;

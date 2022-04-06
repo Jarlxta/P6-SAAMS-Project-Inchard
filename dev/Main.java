@@ -30,10 +30,13 @@ public static void main(String[] args) {
   GOC goc = new GOC(aircraftManagementDatabase,gateInfoDatabase);
   GateConsole gateConsole= new GateConsole(aircraftManagementDatabase,gateInfoDatabase,1);
   GateConsole gateConsole1= new GateConsole(aircraftManagementDatabase,gateInfoDatabase,2);
+  GateConsole gateConsole2= new GateConsole(aircraftManagementDatabase,gateInfoDatabase,3);
+
   MaintenanceInspector maintenanceInspector = new MaintenanceInspector(aircraftManagementDatabase);
   CleaningSupervisor cleaningSupervisor = new CleaningSupervisor(aircraftManagementDatabase);
   RefuellingSupervisor refuellingSupervisor = new RefuellingSupervisor(aircraftManagementDatabase);
   PublicInfo publicInfo = new PublicInfo(aircraftManagementDatabase);
+  PublicInfo publicInfo1 = new PublicInfo(aircraftManagementDatabase);
 //  aircraftManagementDatabase.radarDetect(fl);
   }
 

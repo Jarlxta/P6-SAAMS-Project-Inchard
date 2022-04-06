@@ -97,6 +97,10 @@ public class AircraftManagementDatabase extends Observable {
     notifyObservers();
   }
 
+  public void setTestingStatus(int mCode, int newStatus){
+    this.MRs[mCode].setStatusDebugOverride(newStatus);
+  }
+
   /**
    * Return the flight code from the given MR supplied as a parameter.
    * The request is forwarded to the MR.
@@ -131,6 +135,10 @@ public class AircraftManagementDatabase extends Observable {
             .ifPresent(mr -> mr.radarDetect(fd));
     setChanged();
     notifyObservers();
+  }
+
+  public void radarTestingDetect(int mCode,FlightDescriptor fd){
+    MRs[mCode].radarDetect(fd);
   }
 
   /**

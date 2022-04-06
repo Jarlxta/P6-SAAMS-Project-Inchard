@@ -32,7 +32,7 @@ public class PassengerList {
   }
 
   public PassengerList(List<PassengerDetails> passengers) {
-
+      passengerList = (ArrayList<PassengerDetails>) passengers;
   }
 
   /**

@@ -69,4 +69,8 @@ public class Gate {
 	  if(status == OCCUPIED) status = FREE;
 	  else System.out.println("Cannot depart, status must be occupied");
   }
+
+    public void setStatusTestingMethod(int newStatus){
+        status = newStatus;
+    }
 }
