@@ -22,7 +22,7 @@ public class GateInfoDatabase extends Observable {
     /**
      * A constant: the number of aircraft gates at the airport.
      */
-    public int maxGateNumber = 2;
+    public int maxGateNumber = 3;
     /**
      * Holds one gate object per gate in the airport.
      *

@@ -190,7 +190,7 @@ public class GOC extends JFrame implements Observer, ActionListener, FocusListen
 
     public void displayGatesWithStatus() {
         gatesAndStatus.removeAllElements();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             gatesAndStatus.addElement("dev.Gate " + (i+1) + " - " + gateInfoDatabase.statusToText(gateInfoDatabase.getStatus(i)));
         }
     }
