@@ -250,7 +250,7 @@ public class ManagementRecord {
           if (newStatus == UNLOADING) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+        	  JOptionPane.showMessageDialog(null, "Must dock the aircraft before continuing");
           }
           break;
 
@@ -261,7 +261,7 @@ public class ManagementRecord {
           if (newStatus == READY_CLEAN_AND_MAINT) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+        	  JOptionPane.showMessageDialog(null, "plane must be cleaned and maintaned.");
           }
           break;
 
@@ -270,7 +270,7 @@ public class ManagementRecord {
           if (newStatus == FAULTY_AWAIT_CLEAN || newStatus == CLEAN_AWAIT_MAINT || newStatus == OK_AWAIT_CLEAN) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+        	  JOptionPane.showMessageDialog(null, "Plane cannot depart till it is cleaned and refueled.");
           }
           break;
 
@@ -314,7 +314,7 @@ public class ManagementRecord {
           if (newStatus == READY_DEPART) {
             status = newStatus;
           } else {
-        	 JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+        	 JOptionPane.showMessageDialog(null, "Cannot dock or unload a ready to depart aircraft.");
           }
           break;
 
@@ -322,7 +322,10 @@ public class ManagementRecord {
           if (newStatus == AWAITING_TAXI) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+        	  if(status == 15 && newStatus == 15) {
+        		  JOptionPane.showMessageDialog(null, "Flight has already prepared for departure.");
+        	  }
+        	  JOptionPane.showMessageDialog(null, "Flight is ready to depart and awaiting taxi. Cannot unload now.");
           }
           break;
 
@@ -330,7 +333,7 @@ public class ManagementRecord {
           if (newStatus == AWAITING_TAKEOFF) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+        	  JOptionPane.showMessageDialog(null, "Plane is awaiting take off, gate cannot modify details.");
           }
           break;
 
@@ -395,7 +398,7 @@ public class ManagementRecord {
   * @preconditions Status is IN_TRANSIT or DEPARTING_THROUGH_LOCAL_AIRSPACE*/
   public void radarLostContact(){
     if (status != IN_TRANSIT && status != DEPARTING_THROUGH_LOCAL_AIRSPACE){
-      System.out.println("ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN CONTACT LOST WITH VESSEL.");
+    	JOptionPane.showMessageDialog(null, "Plane cannot depart from local airspace as it is not in the air");
       return;
     }
     flightCode = null;
@@ -412,7 +415,7 @@ public class ManagementRecord {
   * @preconditions Status is LANDED*/
   public void taxiTo(int gateNum){
     if (status != LANDED){
-      System.out.println("ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN ATTEMPTING TO TAXI.");
+    	JOptionPane.showMessageDialog(null, "Status must be landed to taxi plane to gate.");
       return;
     }
     this.gateNumber = gateNum;
@@ -427,7 +430,7 @@ public class ManagementRecord {
   * @preconditions Status is READY_FOR_CLEAN_MAINT or CLEAN_AWAIT_MAINT*/
   public void faultsFound(String description){
     if (status != READY_CLEAN_AND_MAINT && status != CLEAN_AWAIT_MAINT){
-      System.out.println("ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN REPORTING FAULTS.");
+    	JOptionPane.showMessageDialog(null, "ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN REPORTING FAULTS.");
       return;
     }
     this.faultDescription = description;
@@ -438,7 +441,7 @@ public class ManagementRecord {
       setStatus(AWAIT_REPAIR);
     }
     else {
-      System.out.println("ERROR IN MANAGEMENT RECORD: INVALID STATUS CHANGE");
+    	JOptionPane.showMessageDialog(null, "ERROR IN MANAGEMENT RECORD: INVALID STATUS CHANGE");
     }
   }
 

@@ -266,15 +266,20 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
         		JOptionPane.showMessageDialog(this, "There are no planes at this gate yet, consult ground controller.");
         	}else {
 	            if (plainIndexFromFlightCode() != null) {
-	                plainIndexFromFlightCode().addPassenger(new PassengerDetails(passengerNameTF.getText()));
-			passengerNameTF.setText("");    
-	                displayPassengers();
-	                noOfPassengersTF.setText(aMDatabase.getPassengerList(mCode).getListLength() + "");
+	            	if(passengerNameTF.getText().isEmpty()) {
+	            		JOptionPane.showMessageDialog(null, "Passenger name cannot be empty.");
+	            	}else {
+		                plainIndexFromFlightCode().addPassenger(new PassengerDetails(passengerNameTF.getText()));
+		                passengerNameTF.setText("");
+		                displayPassengers();
+		                noOfPassengersTF.setText(aMDatabase.getPassengerList(mCode).getListLength() + "");
+	            	}
 	            }	
         	}
         	return;
         }
         if (e.getSource() == flightReadyToDepartBtn) {
+        	System.out.println(mCode);
             if (plainIndexFromFlightCode() != null) {
                 aMDatabase.setStatus(mCode, ManagementRecord.READY_DEPART);
             }else {

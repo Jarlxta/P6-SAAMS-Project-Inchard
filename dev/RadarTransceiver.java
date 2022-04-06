@@ -141,10 +141,10 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
     }
 
     public void createButtons() {
-    	addPassenger.setBounds(140, 250, 150, 30);
+    	addPassenger.setBounds(140, 250, 180, 30);
         addPassenger.addActionListener(this);
         add(addPassenger);
-        detectFlight.setBounds(140, 160, 150, 30);
+        detectFlight.setBounds(140, 160, 180, 30);
         detectFlight.addActionListener(this);
         add(detectFlight);
         leaveAirspace.setBounds(480, 200, 150, 20);
@@ -198,7 +198,7 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
                 aMDatabase.radarLostContact(mrIndex);
                 planeList.removeElement(aMDatabase.getFlightCode(mrIndex));
             } else {
-            	JOptionPane.showMessageDialog(this, "Cannot leave airspace as plane as requested to land.");
+            	JOptionPane.showMessageDialog(this, "Cannot leave airspace as plane is not in transit or departing.");
             }
         }
     }
