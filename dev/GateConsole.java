@@ -181,12 +181,12 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
     public void planeIndexForGate() {
         for (int i = 0; i < aMDatabase.maxMRs; i++) {
             if (aMDatabase.getStatus(i) >= ManagementRecord.TAXIING
-                    && aMDatabase.getStatus(i) < ManagementRecord.DEPARTING_THROUGH_LOCAL_AIRSPACE
+                    && aMDatabase.getStatus(i) < ManagementRecord.AWAITING_TAKEOFF
                     && aMDatabase.getGate(i) == this.gateNumber) {
                 mCode = i;
                 displayInfoOnGate();
             }
-            if(aMDatabase.getStatus(i)==ManagementRecord.DEPARTING_THROUGH_LOCAL_AIRSPACE
+            if(aMDatabase.getStatus(i)>=ManagementRecord.AWAITING_TAKEOFF
                     && aMDatabase.getGate(i) == this.gateNumber)
             {
                 removeInfoOnGate();
