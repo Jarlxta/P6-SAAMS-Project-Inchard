@@ -198,7 +198,7 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
     	try {
             removeInfoOnGate();
             gateStatusTF.setText(gateInfoDatabase.statusToText(gateInfoDatabase.getStatus(gateNumber)));
-            planeStatusTF.setText(aMDatabase.getStatus(mCode) + "");
+            planeStatusTF.setText(aMDatabase.statusAsText(aMDatabase.getStatus(mCode)));
             flightCodeTF.setText(aMDatabase.getFlightCode(mCode));
             flightFromTF.setText(aMDatabase.getItinerary(mCode).getFrom());
             flightToTF.setText(aMDatabase.getItinerary(mCode).getTo());

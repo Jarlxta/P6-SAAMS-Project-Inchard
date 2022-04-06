@@ -194,7 +194,6 @@ public class RadarTransceiver extends JFrame implements Observer, ActionListener
         if(e.getSource() == leaveAirspace) {
             if(aMDatabase.getStatus(mrIndex) == ManagementRecord.DEPARTING_THROUGH_LOCAL_AIRSPACE
               || aMDatabase.getStatus(mrIndex) == ManagementRecord.IN_TRANSIT) {
-                System.out.println(aMDatabase.getStatus(mrIndex));
                 aMDatabase.radarLostContact(mrIndex);
                 planeList.removeElement(aMDatabase.getFlightCode(mrIndex));
             }
