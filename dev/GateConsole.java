@@ -87,7 +87,7 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
         super(GATE);
         this.aMDatabase = aircraftManagementDatabase;
         this.gateInfoDatabase = gateInfoDatabase;
-        this.gateNumber = gateNumber -1;
+        this.gateNumber = gateNumber - 1;
         this.aMDatabase.addObserver(this);
         this.gateInfoDatabase.addObserver(this);
         initiateGUI();
@@ -186,29 +186,23 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
                 mCode = i;
                 displayInfoOnGate();
             }
-            if(aMDatabase.getStatus(i)>=ManagementRecord.AWAITING_TAKEOFF
-                    && aMDatabase.getGate(i) == this.gateNumber)
-            {
+            if (aMDatabase.getStatus(i) >= ManagementRecord.AWAITING_TAKEOFF
+                    && aMDatabase.getGate(i) == this.gateNumber) {
                 removeInfoOnGate();
             }
         }
     }
 
     public void displayInfoOnGate() {
-    	try {
-            removeInfoOnGate();
-            gateStatusTF.setText(gateInfoDatabase.statusToText(gateInfoDatabase.getStatus(gateNumber)));
-            planeStatusTF.setText(aMDatabase.statusAsText(aMDatabase.getStatus(mCode)));
-            flightCodeTF.setText(aMDatabase.getFlightCode(mCode));
-            flightFromTF.setText(aMDatabase.getItinerary(mCode).getFrom());
-            flightToTF.setText(aMDatabase.getItinerary(mCode).getTo());
-            nextStopTF.setText(aMDatabase.getItinerary(mCode).getNext());
-            noOfPassengersTF.setText(aMDatabase.getPassengerList(mCode).getListLength() + "");
-            displayPassengers();
-    	}catch(java.lang.NullPointerException e) {
-    		removeInfoOnGate();
-    		JOptionPane.showMessageDialog(this, "There are no planes at this gate yet, consult ground controller.");
-    	}
+        removeInfoOnGate();
+        gateStatusTF.setText(gateInfoDatabase.statusToText(gateInfoDatabase.getStatus(gateNumber)));
+        planeStatusTF.setText(aMDatabase.statusAsText(aMDatabase.getStatus(mCode)));
+        flightCodeTF.setText(aMDatabase.getFlightCode(mCode));
+        flightFromTF.setText(aMDatabase.getItinerary(mCode).getFrom());
+        flightToTF.setText(aMDatabase.getItinerary(mCode).getTo());
+        nextStopTF.setText(aMDatabase.getItinerary(mCode).getNext());
+        noOfPassengersTF.setText(aMDatabase.getPassengerList(mCode).getListLength() + "");
+        displayPassengers();
     }
 
     public void removeInfoOnGate() {
@@ -238,52 +232,52 @@ public class GateConsole extends JFrame implements Observer, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == planeDockedBtn) {
-        	if(gateInfoDatabase.getStatus(gateNumber) == 1) {
+            if (gateInfoDatabase.getStatus(gateNumber) == 1) {
                 gateInfoDatabase.docked(gateNumber);
                 aMDatabase.setStatus(mCode, ManagementRecord.UNLOADING);
-                displayInfoOnGate();	
-        	}else {
-        		JOptionPane.showMessageDialog(this, "Gate must be reserved through ground controller panel.");
-        	}
+                displayInfoOnGate();
+            } else {
+                JOptionPane.showMessageDialog(this, "Gate must be reserved through ground controller panel.");
+            }
             return;
         }
 
         if (e.getSource() == planeUnloadedBtn) {
-        	if(gateInfoDatabase.getStatus(gateNumber) == 2) {
-        		aMDatabase.setStatus(mCode, ManagementRecord.READY_CLEAN_AND_MAINT);
-        		aMDatabase.getPassengerList(mCode).setListToEmpty();
+            if (gateInfoDatabase.getStatus(gateNumber) == 2) {
+                aMDatabase.setStatus(mCode, ManagementRecord.READY_CLEAN_AND_MAINT);
+                aMDatabase.getPassengerList(mCode).setListToEmpty();
                 displayPassengers();
                 displayInfoOnGate();
-        	}else {
-        		JOptionPane.showMessageDialog(this, "Gate must be occupied, "
-        				+ "press the docked button after gate has been reserved through ground controller.");
-        	}
+            } else {
+                JOptionPane.showMessageDialog(this, "Gate must be occupied, "
+                        + "press the docked button after gate has been reserved through ground controller.");
+            }
             return;
         }
 
         if (e.getSource() == addPassengerBtn) {
-        	if(flightCodeTF.getText().isEmpty()) {
-        		JOptionPane.showMessageDialog(this, "There are no planes at this gate yet, consult ground controller.");
-        	}else {
-	            if (plainIndexFromFlightCode() != null) {
-	            	if(passengerNameTF.getText().isEmpty()) {
-	            		JOptionPane.showMessageDialog(null, "Passenger name cannot be empty.");
-	            	}else {
-		                plainIndexFromFlightCode().addPassenger(new PassengerDetails(passengerNameTF.getText()));
-		                passengerNameTF.setText("");
-		                displayPassengers();
-		                noOfPassengersTF.setText(aMDatabase.getPassengerList(mCode).getListLength() + "");
-	            	}
-	            }	
-        	}
-        	return;
+            if (flightCodeTF.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "There are no planes at this gate yet, consult ground controller.");
+            } else {
+                if (plainIndexFromFlightCode() != null) {
+                    if (passengerNameTF.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Passenger name cannot be empty.");
+                    } else {
+                        plainIndexFromFlightCode().addPassenger(new PassengerDetails(passengerNameTF.getText()));
+                        passengerNameTF.setText("");
+                        displayPassengers();
+                        noOfPassengersTF.setText(aMDatabase.getPassengerList(mCode).getListLength() + "");
+                    }
+                }
+            }
+            return;
         }
         if (e.getSource() == flightReadyToDepartBtn) {
-        	System.out.println(mCode);
+            System.out.println(mCode);
             if (plainIndexFromFlightCode() != null) {
                 aMDatabase.setStatus(mCode, ManagementRecord.READY_DEPART);
-            }else {
-            	JOptionPane.showMessageDialog(this, "Gate must be occupied and plane must be refueled.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Gate must be occupied and plane must be refueled.");
             }
             return;
         }

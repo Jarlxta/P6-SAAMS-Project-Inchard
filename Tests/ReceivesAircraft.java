@@ -22,6 +22,10 @@ class ReceivesAircraft {
     PassengerList passengerList2;
     PassengerList passengerList3;
 
+    /**
+     * Set ups the data that will be used for the testing of embarks aircraft use case
+     * Testing methods have been created in order to set the status manually without any validation.
+     */
     @BeforeEach
     void setUp() {
 
@@ -39,6 +43,7 @@ class ReceivesAircraft {
         FlightDescriptor flightDescriptor2 = new FlightDescriptor("FK1332", itinerary, passengerList2);
         FlightDescriptor flightDescriptor3 = new FlightDescriptor("FK1332", itinerary, passengerList3);
 
+        // Preparing the MRs[Passengers list to show unloading behavior
         amd = new AircraftManagementDatabase(MRs);
         amd.radarTestingDetect(5,flightDescriptor1);
         amd.setTestingStatus(5,ManagementRecord.WANTING_TO_LAND);
@@ -53,14 +58,12 @@ class ReceivesAircraft {
         amd.addPassenger(2,new PassengerDetails("Jack Dalton"));
         amd.addPassenger(2,new PassengerDetails("William Dalton"));
         amd.addPassenger(2,new PassengerDetails("Averell Dalton"));
-        System.out.println(amd.getPassengerList(5).getListLength());
         amd.radarTestingDetect(8,flightDescriptor3);
         amd.setTestingStatus(8,ManagementRecord.WANTING_TO_LAND);
         amd.addPassenger(8,new PassengerDetails("Joe Dalton"));
         amd.addPassenger(8,new PassengerDetails("Jack Dalton"));
         amd.addPassenger(8,new PassengerDetails("William Dalton"));
         amd.addPassenger(8,new PassengerDetails("Averell Dalton"));
-        System.out.println(amd.getPassengerList(5).getListLength());
         amd.setTestingStatus(5,6);
         amd.setTestingStatus(2,12);
         amd.setTestingStatus(8,3);
@@ -68,7 +71,7 @@ class ReceivesAircraft {
         for (int i = 0; i < 3; i++) {
             gates[i] = new Gate();
         }
-        System.out.println(amd.getPassengerList(5).getListLength());
+
         gid = new GateInfoDatabase(gates);
         gid.setStatusDebug(0, 0);
         gid.setStatusDebug(1, 1);
@@ -79,6 +82,7 @@ class ReceivesAircraft {
     void tearDown() {
     }
 
+    // asserts the transitions from valid/invalid status and checks
     @Test
     void receivesAircraft() {
         gid.docked(1);
@@ -102,6 +106,9 @@ class ReceivesAircraft {
             e.printStackTrace();
         }
 
+        // setStatuses and check the trigger method that is used from GateConsole @setListToEmpty
+        // in order to complete unloading
+
         amd.getPassengerList(5).setListToEmpty();
         amd.setStatus(5,ManagementRecord.UNLOADING);
 
@@ -111,6 +118,7 @@ class ReceivesAircraft {
         amd.getPassengerList(8).setListToEmpty();
         amd.setStatus(8,ManagementRecord.UNLOADING);
 
+        // assert that unloading from correct status works
         assertEquals(ManagementRecord.UNLOADING, amd.getStatus(5));
         assertEquals(0,amd.getPassengerList(5).getListLength());
 

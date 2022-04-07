@@ -24,12 +24,17 @@ class EmbarksAircraft {
     PassengerList passengerList2;
     PassengerList passengerList3;
 
+    /**
+     * Set ups the data that will be used for the testing of embarks aircraft use case
+     * Testing methods have been created in order to set the status manually without any validation.
+     */
     @BeforeEach
     void setUp() {
 
         for (int i = 0; i < MRs.length; i++) {
             MRs[i] = new ManagementRecord();
         }
+
         itinerary = new Itinerary("Canada", "Tokyo", "Stirling");
         List<PassengerDetails> passengers = new ArrayList<>();
         List<PassengerDetails> passengers2 = new ArrayList<>();
@@ -49,14 +54,10 @@ class EmbarksAircraft {
         amd.radarTestingDetect(2, flightDescriptor2);
         amd.setTestingStatus(2, ManagementRecord.AWAITING_TAKEOFF);
 
-
         amd.radarTestingDetect(8, flightDescriptor3);
         amd.setTestingStatus(8, ManagementRecord.READY_PASSENGERS);
 
 
-//        amd.setTestingStatus(5, 6);
-//        amd.setTestingStatus(2, 12);
-//        amd.setTestingStatus(8, 3);
 
         for (int i = 0; i < 3; i++) {
             gates[i] = new Gate();
@@ -75,6 +76,7 @@ class EmbarksAircraft {
     @Test
     void receivesAircraft() {
 
+        // ASSERT EQUALS/NOT EQUALS to check if the status is correct and the adding of passengers can be completed/or not
         assertNotEquals(Gate.OCCUPIED, gid.getStatus(0));
         assertEquals(0,amd.getPassengerList(5).getListLength());
         amd.addPassenger(5, new PassengerDetails("Joe Dalton"));
@@ -99,6 +101,7 @@ class EmbarksAircraft {
         amd.addPassenger(8, new PassengerDetails("Averell Dalton"));
         assertEquals(4, amd.getPassengerList(8).getListLength());
 
+        //Simulate boarding
         System.out.println("Passengers boarded...");
         try {
             Thread.sleep(500);
@@ -106,11 +109,16 @@ class EmbarksAircraft {
             e.printStackTrace();
         }
 
+        // setting the status wherever its possible to be set and testing the outcome behavior
+        // the third case of MR[8] is the only one that should pass
         amd.setStatus(5,ManagementRecord.READY_DEPART);
         assertNotEquals(ManagementRecord.READY_DEPART,amd.getStatus(5));
 
         amd.setStatus(2,ManagementRecord.READY_DEPART);
         assertNotEquals(ManagementRecord.READY_DEPART,amd.getStatus(2));
+
+        amd.setStatus(8,ManagementRecord.READY_DEPART);
+        assertEquals(ManagementRecord.READY_DEPART,amd.getStatus(8));
 
         assertNotEquals(ManagementRecord.UNLOADING, amd.getStatus(8));
         assertNotEquals(0, amd.getPassengerList(8).getListLength());

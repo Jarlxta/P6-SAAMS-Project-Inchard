@@ -193,7 +193,7 @@ public class ManagementRecord {
           else {
             System.out.println("ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
 
-            JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+//            JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
           }
           break;
 
@@ -204,7 +204,7 @@ public class ManagementRecord {
           if (newStatus == FREE) { //This will probably just be called in radarLostContact();
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+//        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
           }
           break;
 
@@ -213,7 +213,7 @@ public class ManagementRecord {
           if (newStatus == GROUND_CLEARANCE_GRANTED) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+//        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
           }
           break;
 
@@ -222,7 +222,7 @@ public class ManagementRecord {
           if (newStatus == LANDING) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+        	 // JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
           }
           break;
 
@@ -231,7 +231,7 @@ public class ManagementRecord {
           if (newStatus == LANDED) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+//        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
           }
           break;
 
@@ -240,7 +240,7 @@ public class ManagementRecord {
           if (newStatus == TAXIING) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+//        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
           }
           break;
 
@@ -249,7 +249,7 @@ public class ManagementRecord {
           if (newStatus == UNLOADING) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "Must dock the aircraft before continuing");
+//        	  JOptionPane.showMessageDialog(null, "Must dock the aircraft before continuing");
           }
           break;
 
@@ -260,7 +260,7 @@ public class ManagementRecord {
           if (newStatus == READY_CLEAN_AND_MAINT) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "plane must be cleaned and maintaned.");
+//        	  JOptionPane.showMessageDialog(null, "plane must be cleaned and maintaned.");
           }
           break;
 
@@ -269,7 +269,7 @@ public class ManagementRecord {
           if (newStatus == FAULTY_AWAIT_CLEAN || newStatus == CLEAN_AWAIT_MAINT || newStatus == OK_AWAIT_CLEAN) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "Plane cannot depart till it is cleaned and refueled.");
+//        	  JOptionPane.showMessageDialog(null, "Plane cannot depart till it is cleaned and refueled.");
           }
           break;
 
@@ -278,7 +278,7 @@ public class ManagementRecord {
           if (newStatus == AWAIT_REPAIR) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+//        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
           }
           break;
 
@@ -287,7 +287,7 @@ public class ManagementRecord {
           if (newStatus == AWAIT_REPAIR || newStatus == READY_REFUEL) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+//        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
           }
           break;
 
@@ -296,7 +296,7 @@ public class ManagementRecord {
           if (newStatus == READY_REFUEL) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+//        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
           }
           break;
 
@@ -305,7 +305,7 @@ public class ManagementRecord {
           if (newStatus == READY_PASSENGERS) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+//        	  JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
           }
           break;
 
@@ -313,7 +313,7 @@ public class ManagementRecord {
           if (newStatus == READY_DEPART) {
             status = newStatus;
           } else {
-        	 JOptionPane.showMessageDialog(null, "Cannot dock or unload a ready to depart aircraft.");
+//        	 JOptionPane.showMessageDialog(null, "Cannot dock or unload a ready to depart aircraft.");
           }
           break;
 
@@ -322,9 +322,9 @@ public class ManagementRecord {
             status = newStatus;
           } else {
         	  if(status == 15 && newStatus == 15) {
-        		  JOptionPane.showMessageDialog(null, "Flight has already prepared for departure.");
+//        		  JOptionPane.showMessageDialog(null, "Flight has already prepared for departure.");
         	  }
-        	  JOptionPane.showMessageDialog(null, "Flight is ready to depart and awaiting taxi. Cannot unload now.");
+//        	  JOptionPane.showMessageDialog(null, "Flight is ready to depart and awaiting taxi. Cannot unload now.");
           }
           break;
 
@@ -332,7 +332,7 @@ public class ManagementRecord {
           if (newStatus == AWAITING_TAKEOFF) {
             status = newStatus;
           } else {
-        	  JOptionPane.showMessageDialog(null, "Plane is awaiting take off, gate cannot modify details.");
+//        	  JOptionPane.showMessageDialog(null, "Plane is awaiting take off, gate cannot modify details.");
           }
           break;
 
@@ -340,7 +340,7 @@ public class ManagementRecord {
           if (newStatus == DEPARTING_THROUGH_LOCAL_AIRSPACE) {
             status = newStatus;
           } else {
-            JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
+//            JOptionPane.showMessageDialog(null, "ERROR: That wasn't a valid state change! Case " + status + " to " + newStatus);
           }
           break;
       }
@@ -397,7 +397,7 @@ public class ManagementRecord {
   * @preconditions Status is IN_TRANSIT or DEPARTING_THROUGH_LOCAL_AIRSPACE*/
   public void radarLostContact(){
     if (status != IN_TRANSIT && status != DEPARTING_THROUGH_LOCAL_AIRSPACE){
-    	JOptionPane.showMessageDialog(null, "Plane cannot depart from local airspace as it is not in the air");
+//    	JOptionPane.showMessageDialog(null, "Plane cannot depart from local airspace as it is not in the air");
       return;
     }
     flightCode = null;
@@ -414,7 +414,7 @@ public class ManagementRecord {
   * @preconditions Status is LANDED*/
   public void taxiTo(int gateNum){
     if (status != LANDED){
-    	JOptionPane.showMessageDialog(null, "Status must be landed to taxi plane to gate.");
+//    	JOptionPane.showMessageDialog(null, "Status must be landed to taxi plane to gate.");
       return;
     }
     this.gateNumber = gateNum;
@@ -429,7 +429,7 @@ public class ManagementRecord {
   * @preconditions Status is READY_FOR_CLEAN_MAINT or CLEAN_AWAIT_MAINT*/
   public void faultsFound(String description){
     if (status != READY_CLEAN_AND_MAINT && status != CLEAN_AWAIT_MAINT){
-    	JOptionPane.showMessageDialog(null, "ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN REPORTING FAULTS.");
+//    	JOptionPane.showMessageDialog(null, "ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN REPORTING FAULTS.");
       return;
     }
     this.faultDescription = description;
@@ -440,7 +440,7 @@ public class ManagementRecord {
       setStatus(AWAIT_REPAIR);
     }
     else {
-    	JOptionPane.showMessageDialog(null, "ERROR IN MANAGEMENT RECORD: INVALID STATUS CHANGE");
+//    	JOptionPane.showMessageDialog(null, "ERROR IN MANAGEMENT RECORD: INVALID STATUS CHANGE");
     }
   }
 
@@ -452,7 +452,7 @@ public class ManagementRecord {
   * @preconditions Status is READY_PASSENGERS*/
   public void addPassenger(PassengerDetails details){
     if (status != READY_PASSENGERS && status != IN_TRANSIT && status != WANTING_TO_LAND){
-      JOptionPane.showMessageDialog(null, "ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN ADDING PASSENGER.");
+//      JOptionPane.showMessageDialog(null, "ERROR IN MANAGEMENT RECORD: STATUS NOT VALID WHEN ADDING PASSENGER.");
       return;
     }
 

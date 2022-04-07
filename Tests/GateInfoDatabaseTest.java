@@ -75,9 +75,4 @@ class GateInfoDatabaseTest {
         gid.departed(2);
         assertNotEquals(Gate.FREE,gid.getStatus(2));
     }
-//
-//    @Test
-//    void getStatusToString() {
-//        assertEquals("Free",gateInfoDatabase.getStatusToString(0));
-//    }//checking if the statuses are converted correctly to strings
 }
